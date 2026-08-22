@@ -1,0 +1,226 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
+/* ========================
+   Glassmorphism Utilities
+   ======================== */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ========================
+   Gradient Utilities
+   ======================== */
+.gradient-teal {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+}
+
+.gradient-blue-teal {
+  background: linear-gradient(135deg, #0f766e 0%, #1e40af 100%);
+}
+
+.gradient-indigo {
+  background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+}
+
+.gradient-emergency {
+  background: linear-gradient(135deg, #e11d48 0%, #9f1239 100%);
+}
+
+.gradient-mesh {
+  background-color: #f8fafc;
+  background-image: 
+    radial-gradient(at 10% 20%, rgba(13, 148, 136, 0.12) 0px, transparent 50%),
+    radial-gradient(at 90% 10%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+    radial-gradient(at 50% 80%, rgba(45, 212, 191, 0.10) 0px, transparent 50%);
+}
+
+/* ========================
+   Custom Scrollbar
+   ======================== */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ========================
+   Animation Utilities
+   (replaces tailwindcss-animate)
+   ======================== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse-ring {
+  0% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.4); }
+  70% { box-shadow: 0 0 0 12px rgba(13, 148, 136, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0); }
+}
+
+/* Tailwind-animate compatible class names */
+.animate-in {
+  animation-duration: 0.25s;
+  animation-fill-mode: both;
+}
+
+.fade-in-50 {
+  animation-name: fadeIn;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slideInFromTop;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.slide-in-from-bottom-2 {
+  animation-name: slideInFromBottom;
+  animation-duration: 0.3s;
+  animation-fill-mode: both;
+}
+
+.scale-in-95 {
+  animation-name: scaleIn;
+  animation-duration: 0.25s;
+  animation-fill-mode: both;
+}
+
+/* ========================
+   Printable Health ID Card
+   ======================== */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .printable-health-card,
+  .printable-health-card * {
+    visibility: visible;
+  }
+  .printable-health-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none !important;
+    border: 2px solid #000 !important;
+    border-radius: 0 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* ========================
+   Focus Styles
+   ======================== */
+:focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+}
+
+/* ========================
+   Transition Default
+   ======================== */
+.transition {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* ========================
+   Line Clamp Utilities
+   ======================== */
+.line-clamp-2 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+/* ========================
+   Sidebar Transition
+   ======================== */
+.sidebar-transition {
+  transition: transform 0.3s ease-in-out;
+}
