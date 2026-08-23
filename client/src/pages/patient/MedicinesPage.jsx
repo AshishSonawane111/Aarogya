@@ -59,7 +59,7 @@ export const MedicinesPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <Pill className="w-5 h-5 text-teal-600" />
+            <Pill className="w-5 h-5 text-sky-600" />
             Active Medicines & Daily Reminders
           </h2>
           <p className="text-xs text-slate-500">
@@ -68,7 +68,7 @@ export const MedicinesPage = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-bold text-teal-700 bg-teal-50 px-3 py-1 rounded-xl border border-teal-200">
+          <span className="text-xs font-bold text-sky-700 bg-sky-50 px-3 py-1 rounded-xl border border-sky-200">
             {data.active.length} Active Prescriptions
           </span>
         </div>
@@ -88,7 +88,7 @@ export const MedicinesPage = () => {
       {/* Active Medications Grid */}
       <div className="space-y-4">
         <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-          <Clock className="w-4 h-4 text-teal-600" />
+          <Clock className="w-4 h-4 text-sky-600" />
           Today's Scheduled Medication Regimen
         </h3>
 
@@ -113,7 +113,7 @@ export const MedicinesPage = () => {
                     <div className="flex items-start justify-between gap-2 border-b border-slate-100 pb-3">
                       <div>
                         <h4 className="font-bold text-sm text-slate-900">{med.name}</h4>
-                        <div className="text-xs text-teal-700 font-semibold">{med.dosage} • {med.frequency}</div>
+                        <div className="text-xs text-sky-700 font-semibold">{med.dosage} • {med.frequency}</div>
                       </div>
                       <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                         Active
@@ -125,7 +125,7 @@ export const MedicinesPage = () => {
                       <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
                         <span className="text-[10px] text-slate-400 uppercase font-semibold block">Reminder Times</span>
                         <div className="font-mono font-bold text-slate-800 flex items-center gap-1 mt-0.5">
-                          <Clock className="w-3 h-3 text-teal-600" />
+                          <Clock className="w-3 h-3 text-sky-600" />
                           {med.reminder_times?.join(', ') || '08:30'}
                         </div>
                       </div>
@@ -139,8 +139,8 @@ export const MedicinesPage = () => {
                     </div>
 
                     {/* Source and instructions */}
-                    <div className="text-xs text-slate-600 bg-teal-50/40 p-2.5 rounded-xl border border-teal-100 space-y-1">
-                      <div className="text-[11px] font-bold text-teal-950">
+                    <div className="text-xs text-slate-600 bg-sky-50/40 p-2.5 rounded-xl border border-sky-100 space-y-1">
+                      <div className="text-[11px] font-bold text-sky-950">
                         Source: {med.prescription_source || 'Doctor Consultation'}
                       </div>
                       <div className="text-[10px] text-slate-500">{med.safety_notes}</div>
@@ -153,7 +153,7 @@ export const MedicinesPage = () => {
                     className={`w-full py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition ${
                       isTaken
                         ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                        : 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/20'
+                        : 'bg-sky-600 hover:bg-sky-700 text-white shadow-md shadow-sky-600/20'
                     }`}
                   >
                     {isTaken ? (

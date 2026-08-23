@@ -38,7 +38,7 @@ export const ForgotPassword = () => {
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 gradient-mesh">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
         <Link to="/" className="inline-flex items-center gap-2.5 mb-3">
-          <div className="w-10 h-10 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-md">
+          <div className="w-10 h-10 rounded-xl bg-sky-600 flex items-center justify-center text-white shadow-md">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <span className="font-bold text-xl text-slate-900 tracking-tight">HEALTH PASSPORT</span>
@@ -62,7 +62,7 @@ export const ForgotPassword = () => {
               </p>
               <Link
                 to="/auth/patient"
-                className="inline-flex items-center gap-2 text-xs font-bold text-teal-600 hover:text-teal-800 pt-2"
+                className="inline-flex items-center gap-2 text-xs font-bold text-sky-600 hover:text-sky-800 pt-2"
               >
                 <ArrowLeft className="w-4 h-4" /> Back to Login
               </Link>
@@ -79,7 +79,7 @@ export const ForgotPassword = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="rajesh.kumar@healthpassport.in"
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
                     required
                   />
                   <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
@@ -89,7 +89,7 @@ export const ForgotPassword = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 transition"
+                className="w-full py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-md shadow-sky-600/20 transition"
               >
                 {loading ? 'Sending Instructions...' : 'Send Recovery Instructions'}
               </button>

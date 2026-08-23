@@ -137,7 +137,7 @@ export const EmergencyPage = () => {
               value={contactName}
               onChange={(e) => setContactName(e.target.value)}
               placeholder="e.g. Sunita Kumar"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-medium"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none font-medium"
               required
             />
           </div>
@@ -149,7 +149,7 @@ export const EmergencyPage = () => {
               value={contactPhone}
               onChange={(e) => setContactPhone(e.target.value)}
               placeholder="e.g. +91 98201 99001"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-medium"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none font-medium"
               required
             />
           </div>
@@ -161,7 +161,7 @@ export const EmergencyPage = () => {
               value={contactRelation}
               onChange={(e) => setContactRelation(e.target.value)}
               placeholder="e.g. Spouse / Parent"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none font-medium"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none font-medium"
               required
             />
           </div>
@@ -179,13 +179,13 @@ export const EmergencyPage = () => {
               value={allergies}
               onChange={(e) => setAllergies(e.target.value)}
               placeholder="e.g. Penicillin, Sulfa Drugs, Peanuts"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
           </div>
 
           <div>
             <label className="text-xs font-bold text-slate-700 block mb-1 flex items-center gap-1.5">
-              <HeartPulse className="w-3.5 h-3.5 text-teal-600" />
+              <HeartPulse className="w-3.5 h-3.5 text-sky-600" />
               Major Medical Conditions (comma separated):
             </label>
             <input
@@ -193,7 +193,7 @@ export const EmergencyPage = () => {
               value={majorConditions}
               onChange={(e) => setMajorConditions(e.target.value)}
               placeholder="e.g. Hypertension Stage 2, Type 2 Diabetes Mellitus"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
           </div>
 
@@ -207,7 +207,7 @@ export const EmergencyPage = () => {
               value={criticalMeds}
               onChange={(e) => setCriticalMeds(e.target.value)}
               placeholder="e.g. Telmisartan 40mg, Metformin 500mg"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
           </div>
         </div>
@@ -222,7 +222,7 @@ export const EmergencyPage = () => {
             type="checkbox"
             checked={organDonor}
             onChange={(e) => setOrganDonor(e.target.checked)}
-            className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500"
+            className="w-5 h-5 text-sky-600 rounded focus:ring-sky-500"
           />
         </div>
 
@@ -231,7 +231,7 @@ export const EmergencyPage = () => {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 flex items-center gap-2 transition"
+            className="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-md shadow-sky-600/20 flex items-center gap-2 transition"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Encrypting & Updating...' : 'Save Emergency Health Profile'}

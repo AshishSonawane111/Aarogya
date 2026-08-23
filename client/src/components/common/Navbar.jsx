@@ -41,7 +41,7 @@ export const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:pl-64 lg:pr-8">
         <div className="flex items-center justify-between h-16">
           
           {/* Brand and Menu Toggle */}
@@ -55,14 +55,14 @@ export const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
             </button>
 
             <Link to={isPatient ? '/patient/dashboard' : isDoctor ? '/doctor/dashboard' : '/'} className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-teal-600 to-teal-400 flex items-center justify-center text-white shadow-md shadow-teal-500/20">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-600 to-sky-400 flex items-center justify-center text-white shadow-md shadow-sky-500/20">
                 <Shield className="w-6 h-6 stroke-[2.2]" />
               </div>
               <div>
                 <span className="font-bold text-lg text-slate-900 tracking-tight flex items-center gap-1.5">
                   HEALTH PASSPORT
                 </span>
-                <span className="text-[10px] font-medium tracking-wide uppercase px-1.5 py-0.5 rounded bg-teal-50 text-teal-700 border border-teal-200 block sm:inline">
+                <span className="text-[10px] font-medium tracking-wide uppercase px-1.5 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 block sm:inline">
                   {getPortalLabel()}
                 </span>
               </div>
@@ -83,7 +83,7 @@ export const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
                 className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 flex items-center gap-1.5 text-sm font-medium transition"
                 title="Select Language"
               >
-                <Globe className="w-4 h-4 text-teal-600" />
+                <Globe className="w-4 h-4 text-sky-600" />
                 <span className="uppercase text-xs hidden sm:inline">{currentLanguage}</span>
               </button>
 
@@ -99,8 +99,8 @@ export const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
                         changeLanguage(lang.code);
                         setShowLangMenu(false);
                       }}
-                      className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-teal-50 transition ${
-                        currentLanguage === lang.code ? 'font-bold text-teal-700 bg-teal-50/60' : 'text-slate-700'
+                      className={`w-full text-left px-3 py-2 text-xs flex items-center justify-between hover:bg-sky-50 transition ${
+                        currentLanguage === lang.code ? 'font-bold text-sky-700 bg-sky-50/60' : 'text-slate-700'
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -143,7 +143,7 @@ export const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
                     {unreadCount > 0 && (
                       <button
                         onClick={markAllAsRead}
-                        className="text-[11px] text-teal-600 hover:text-teal-800 font-semibold"
+                        className="text-[11px] text-sky-600 hover:text-sky-800 font-semibold"
                       >
                         Mark all as read
                       </button>
@@ -167,7 +167,7 @@ export const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
                             }
                           }}
                           className={`p-3.5 hover:bg-slate-50 cursor-pointer transition flex items-start gap-3 ${
-                            !n.is_read ? 'bg-teal-50/40' : ''
+                            !n.is_read ? 'bg-sky-50/40' : ''
                           }`}
                         >
                           <div className="mt-0.5">
@@ -178,14 +178,14 @@ export const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
                             ) : n.type === 'delay' ? (
                               <AlertTriangle className="w-4 h-4 text-amber-600" />
                             ) : (
-                              <FileText className="w-4 h-4 text-teal-600" />
+                              <FileText className="w-4 h-4 text-sky-600" />
                             )}
                           </div>
                           <div className="flex-1">
                             <div className="text-xs font-semibold text-slate-800 flex items-center justify-between">
                               <span>{n.title}</span>
                               {!n.is_read && (
-                                <span className="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                                <span className="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
                               )}
                             </div>
                             <div className="text-[11px] text-slate-600 mt-0.5 line-clamp-2">

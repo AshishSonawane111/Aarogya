@@ -8,6 +8,8 @@ import { Navbar } from './components/common/Navbar';
 import { Sidebar } from './components/common/Sidebar';
 import { DemoPersonaBar } from './components/common/DemoPersonaBar';
 
+import { PublicEmergencyProfilePage } from './pages/PublicEmergencyProfilePage';
+
 // Landing and Auth Pages
 import { LandingPage } from './pages/LandingPage';
 import { PatientAuth } from './pages/auth/PatientAuth';
@@ -25,7 +27,6 @@ import { AppointmentsPage } from './pages/patient/AppointmentsPage';
 import { MedicinesPage } from './pages/patient/MedicinesPage';
 import { EmergencyPage } from './pages/patient/EmergencyPage';
 import { ConsentCenterPage } from './pages/patient/ConsentCenterPage';
-import { BillsPage } from './pages/patient/BillsPage';
 import { DocumentsPage } from './pages/patient/DocumentsPage';
 import { PatientSettingsPage } from './pages/patient/PatientSettingsPage';
 
@@ -49,7 +50,7 @@ const AppLayout = () => {
   const location = useLocation();
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-teal-500 selection:text-white">
+    <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-sky-500 selection:text-white">
       {/* Demo Quick Switcher Banner */}
       <DemoPersonaBar />
 
@@ -102,8 +103,9 @@ function App() {
         <NotificationProvider>
           <BrowserRouter>
             <Routes>
-              {/* Public Marketing & Auth */}
+              {/* Public Marketing, Auth & Public Emergency Profile */}
               <Route path="/" element={<LandingPage />} />
+              <Route path="/emergency/:token" element={<PublicEmergencyProfilePage />} />
               <Route path="/auth/patient" element={<PatientAuth />} />
               <Route path="/auth/doctor" element={<DoctorAuth />} />
               <Route path="/auth/forgot-password" element={<ForgotPassword />} />
@@ -120,7 +122,6 @@ function App() {
                 <Route path="/patient/medicines" element={<MedicinesPage />} />
                 <Route path="/patient/emergency" element={<EmergencyPage />} />
                 <Route path="/patient/consent" element={<ConsentCenterPage />} />
-                <Route path="/patient/bills" element={<BillsPage />} />
                 <Route path="/patient/documents" element={<DocumentsPage />} />
                 <Route path="/patient/settings" element={<PatientSettingsPage />} />
               </Route>

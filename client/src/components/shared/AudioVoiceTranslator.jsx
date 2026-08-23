@@ -120,19 +120,19 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
     <div className="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden">
       
       {/* Header Bar */}
-      <div className="p-4 bg-gradient-to-r from-teal-900 to-slate-900 text-white flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 bg-gradient-to-r from-sky-900 to-slate-900 text-white flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-teal-500/20 flex items-center justify-center text-teal-300">
+          <div className="w-8 h-8 rounded-lg bg-sky-500/20 flex items-center justify-center text-sky-300">
             <Languages className="w-4 h-4" />
           </div>
           <div>
             <h3 className="font-bold text-sm">Multilingual Healthcare Voice & Text Translator</h3>
-            <p className="text-[10px] text-teal-200">7 Indian Languages with Clinical Speech Synthesis</p>
+            <p className="text-[10px] text-sky-200">7 Indian Languages with Clinical Speech Synthesis</p>
           </div>
         </div>
 
-        <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30 flex items-center gap-1">
-          <Sparkles className="w-3 h-3 text-teal-400" />
+        <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/30 flex items-center gap-1">
+          <Sparkles className="w-3 h-3 text-sky-400" />
           AI Speech Engine
         </span>
       </div>
@@ -149,7 +149,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
               setSourceLang(e.target.value);
               if (inputText) handleTranslate();
             }}
-            className="w-full p-2 rounded-xl border border-slate-300 text-xs font-medium bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            className="w-full p-2 rounded-xl border border-slate-300 text-xs font-medium bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
           >
             {LANGUAGES.map((lang) => (
               <option key={lang.code} value={lang.code}>
@@ -177,7 +177,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
               setTargetLang(e.target.value);
               if (inputText) handleTranslate();
             }}
-            className="w-full p-2 rounded-xl border border-slate-300 text-xs font-medium bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            className="w-full p-2 rounded-xl border border-slate-300 text-xs font-medium bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
           >
             {LANGUAGES.map((lang) => (
               <option key={lang.code} value={lang.code}>
@@ -218,7 +218,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
                 handleTranslate(e.target.value);
               }}
               placeholder="Type medical instructions, symptoms, or click microphone to speak..."
-              className="w-full p-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-teal-500 focus:outline-none placeholder:text-slate-400"
+              className="w-full p-3 rounded-xl border border-slate-200 text-sm focus:ring-2 focus:ring-sky-500 focus:outline-none placeholder:text-slate-400"
             />
           </div>
 
@@ -229,7 +229,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
               className={`py-2 px-4 rounded-xl text-xs font-bold flex items-center gap-2 transition ${
                 isListening
                   ? 'bg-rose-600 text-white animate-pulse shadow-md shadow-rose-600/30'
-                  : 'bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200'
+                  : 'bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200'
               }`}
             >
               {isListening ? (
@@ -239,7 +239,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
                 </>
               ) : (
                 <>
-                  <Mic className="w-4 h-4 text-teal-600" />
+                  <Mic className="w-4 h-4 text-sky-600" />
                   <span>Speak via Microphone</span>
                 </>
               )}
@@ -248,7 +248,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
             <button
               onClick={() => handleTranslate()}
               disabled={isTranslating || !inputText.trim()}
-              className="py-2 px-5 rounded-xl bg-teal-600 hover:bg-teal-700 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-teal-600/20 transition"
+              className="py-2 px-5 rounded-xl bg-sky-600 hover:bg-sky-700 disabled:opacity-50 text-white text-xs font-bold shadow-md shadow-sky-600/20 transition"
             >
               {isTranslating ? 'Translating...' : 'Translate'}
             </button>
@@ -263,7 +263,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
               {translatedText && (
                 <button
                   onClick={handleCopy}
-                  className="text-[11px] text-teal-700 hover:text-teal-900 flex items-center gap-1 font-semibold"
+                  className="text-[11px] text-sky-700 hover:text-sky-900 flex items-center gap-1 font-semibold"
                 >
                   {copied ? <CheckCircle2 className="w-3 h-3 text-emerald-600" /> : <Copy className="w-3 h-3" />}
                   {copied ? 'Copied' : 'Copy Text'}
@@ -271,7 +271,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
               )}
             </div>
 
-            <div className="w-full min-h-[125px] p-3 rounded-xl border border-teal-200/80 bg-white text-slate-900 text-sm leading-relaxed shadow-inner font-medium flex items-center">
+            <div className="w-full min-h-[125px] p-3 rounded-xl border border-sky-200/80 bg-white text-slate-900 text-sm leading-relaxed shadow-inner font-medium flex items-center">
               {translatedText ? (
                 <span className="text-slate-900">{translatedText}</span>
               ) : (
@@ -330,7 +330,7 @@ export const AudioVoiceTranslator = ({ defaultSource = 'en', defaultTarget = 'hi
                   setInputText(phrase);
                   handleTranslate(phrase);
                 }}
-                className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-teal-50 hover:text-teal-800 text-slate-700 text-xs transition border border-slate-200"
+                className="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-800 text-slate-700 text-xs transition border border-slate-200"
               >
                 "{phrase}"
               </button>

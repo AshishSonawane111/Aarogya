@@ -72,16 +72,16 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
       <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* Patient header */}
-        <div className="bg-teal-50 p-3 rounded-xl border border-teal-200 flex items-center justify-between text-xs">
+        <div className="bg-sky-50 p-3 rounded-xl border border-sky-200 flex items-center justify-between text-xs">
           <div>
-            <span className="text-teal-950 font-bold">
+            <span className="text-sky-950 font-bold">
               Patient: {patient.first_name} {patient.last_name}
             </span>
-            <span className="text-teal-700 font-mono text-[11px] block">
+            <span className="text-sky-700 font-mono text-[11px] block">
               {patient.health_id_number || patient.health_id}
             </span>
           </div>
-          <span className="text-teal-800 font-semibold bg-white px-2 py-0.5 rounded-lg border border-teal-200">
+          <span className="text-sky-800 font-semibold bg-white px-2 py-0.5 rounded-lg border border-sky-200">
             Encounter Note
           </span>
         </div>
@@ -89,7 +89,7 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
         {/* Vitals Grid */}
         <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
           <div className="text-xs font-bold text-slate-800 mb-2 flex items-center gap-1.5">
-            <Activity className="w-3.5 h-3.5 text-teal-600" />
+            <Activity className="w-3.5 h-3.5 text-sky-600" />
             Recorded Patient Vitals:
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 text-xs">
@@ -157,7 +157,7 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
               placeholder="e.g. Mild chest tightness on exertion, intermittent dizziness..."
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
               required
             />
           </div>
@@ -171,7 +171,7 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
               value={clinicalAssessment}
               onChange={(e) => setClinicalAssessment(e.target.value)}
               placeholder="e.g. S1 S2 heard normal. Chest clear. Stable hemodynamic status..."
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
               required
             />
           </div>
@@ -188,7 +188,7 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
               value={diagnosis}
               onChange={(e) => setDiagnosis(e.target.value)}
               placeholder="e.g. Essential Hypertension (I10), Dyslipidemia"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
               required
             />
           </div>
@@ -202,7 +202,7 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
               value={followUp}
               onChange={(e) => setFollowUp(e.target.value)}
               placeholder="e.g. Review in 4 weeks with lipid profile and daily BP chart"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
           </div>
         </div>
@@ -217,7 +217,7 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
             value={treatmentPlan}
             onChange={(e) => setTreatmentPlan(e.target.value)}
             placeholder="e.g. Continue Telmisartan 40mg. Reduce salt intake to <2g/day. Recommended 30 mins brisk walking..."
-            className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
             required
           />
         </div>
@@ -234,7 +234,7 @@ export const ConsultationModal = ({ isOpen, onClose, patient, onSuccess }) => {
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-teal-600/20 transition"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 transition"
           >
             <CheckCircle2 className="w-4 h-4" />
             {loading ? 'Saving Consultation...' : 'Finalize & Sign Consultation'}

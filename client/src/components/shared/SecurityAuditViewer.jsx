@@ -54,7 +54,7 @@ export const SecurityAuditViewer = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-teal-600" />
+            <ShieldCheck className="w-5 h-5 text-sky-600" />
             Immutable Medical Access Audit Trail
           </h3>
           <p className="text-xs text-slate-500">
@@ -77,7 +77,7 @@ export const SecurityAuditViewer = () => {
             placeholder="Search by actor, action, or IP address..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            className="w-full pl-9 pr-4 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
           />
           <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
         </div>
@@ -85,7 +85,7 @@ export const SecurityAuditViewer = () => {
         <select
           value={actionFilter}
           onChange={(e) => setActionFilter(e.target.value)}
-          className="p-2 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+          className="p-2 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
         >
           <option value="all">All Actions</option>
           <option value="search">Patient Search</option>
@@ -134,7 +134,7 @@ export const SecurityAuditViewer = () => {
 
                   <td className="p-3 whitespace-nowrap">
                     <div className="font-bold text-slate-800 flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-teal-600" />
+                      <User className="w-3.5 h-3.5 text-sky-600" />
                       {log.actor_name || 'System User'}
                     </div>
                     <span className="text-[10px] uppercase font-bold text-slate-400">
@@ -150,7 +150,7 @@ export const SecurityAuditViewer = () => {
 
                   <td className="p-3">
                     {log.category_accessed ? (
-                      <span className="px-2 py-0.5 rounded bg-teal-50 text-teal-800 border border-teal-200 font-mono text-[10px]">
+                      <span className="px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-200 font-mono text-[10px]">
                         {getCategoryLabel(log.category_accessed)}
                       </span>
                     ) : (

@@ -35,6 +35,7 @@ export const patientAPI = {
   getDashboard: () => api.get('/patients/dashboard'),
   getHealthId: (patientId) => api.get('/patients/health-id', { params: { patientId } }),
   getEmergency: (patientId) => api.get(`/patients/emergency/${patientId}`),
+  getPublicEmergencyProfile: (token) => api.get(`/emergency-profile/${token}`),
   updateEmergency: (data) => api.put('/patients/emergency', data),
   getSettings: () => api.get('/patients/settings'),
   updateSettings: (data) => api.put('/patients/settings', data)

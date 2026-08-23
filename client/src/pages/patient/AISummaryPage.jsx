@@ -34,7 +34,7 @@ export const AISummaryPage = () => {
   if (loading) {
     return (
       <div className="p-8 text-center text-slate-400 space-y-4 animate-pulse">
-        <Sparkles className="w-8 h-8 text-teal-500 animate-spin mx-auto" />
+        <Sparkles className="w-8 h-8 text-sky-500 animate-spin mx-auto" />
         <div className="text-sm font-bold text-slate-700">Synthesizing Consolidated AI Health Summary...</div>
         <div className="text-xs text-slate-400">Scanning encrypted lab reports, prescriptions, and history...</div>
       </div>
@@ -47,7 +47,7 @@ export const AISummaryPage = () => {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-teal-600" />
+          <Sparkles className="w-5 h-5 text-sky-600" />
           AI-Powered Consolidated Health Summary
         </h2>
         <p className="text-xs text-slate-500">
@@ -71,8 +71,8 @@ export const AISummaryPage = () => {
       {/* Overview Clinical Narrative */}
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-3">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <span className="font-bold text-xs uppercase tracking-wider text-teal-700 flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+          <span className="font-bold text-xs uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-sky-600" />
             Executive Clinical Narrative
           </span>
           <span className="text-[10px] text-slate-400 font-mono">
@@ -109,15 +109,15 @@ export const AISummaryPage = () => {
 
         {/* 2. Chronic Conditions */}
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-          <div className="flex items-center gap-2 text-teal-800 font-bold text-sm border-b border-teal-100 pb-2">
-            <HeartPulse className="w-4 h-4 text-teal-600" />
+          <div className="flex items-center gap-2 text-sky-800 font-bold text-sm border-b border-sky-100 pb-2">
+            <HeartPulse className="w-4 h-4 text-sky-600" />
             <span>Chronic Conditions</span>
           </div>
           <div className="space-y-1.5">
             {summary?.chronic_conditions?.length > 0 ? (
               summary.chronic_conditions.map((item, idx) => (
-                <div key={idx} className="p-2.5 rounded-xl bg-teal-50 border border-teal-200 text-xs font-bold text-teal-950 flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                <div key={idx} className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-xs font-bold text-sky-950 flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-600"></span>
                   {item}
                 </div>
               ))
@@ -168,10 +168,10 @@ export const AISummaryPage = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3 col-span-1 lg:col-span-2">
           <div className="flex items-center justify-between border-b border-slate-100 pb-2">
             <div className="flex items-center gap-2 text-slate-900 font-bold text-sm">
-              <Activity className="w-4 h-4 text-teal-600" />
+              <Activity className="w-4 h-4 text-sky-600" />
               <span>Recent Diagnostic Reports & Findings</span>
             </div>
-            <Link to="/patient/records" className="text-xs font-semibold text-teal-600 hover:text-teal-800 flex items-center gap-1">
+            <Link to="/patient/records" className="text-xs font-semibold text-sky-600 hover:text-sky-800 flex items-center gap-1">
               <span>View Source Files</span>
               <ExternalLink className="w-3 h-3" />
             </Link>

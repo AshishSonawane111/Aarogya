@@ -7,7 +7,7 @@ export const PatientSearchPage = () => {
     <div className="space-y-6 max-w-4xl mx-auto pb-12">
       <div>
         <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <Search className="w-5 h-5 text-teal-600" />
+          <Search className="w-5 h-5 text-sky-600" />
           Zero-Trust Patient Lookup & Consent Requester
         </h2>
         <p className="text-xs text-slate-500">

@@ -104,7 +104,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
               {patient.health_id_number || patient.health_id}
             </span>
           </div>
-          <span className="text-teal-700 font-semibold bg-teal-50 px-2 py-0.5 rounded-lg border border-teal-200">
+          <span className="text-sky-700 font-semibold bg-sky-50 px-2 py-0.5 rounded-lg border border-sky-200">
             Outpatient Rx
           </span>
         </div>
@@ -120,21 +120,21 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
               value={diagnosisSummary}
               onChange={(e) => setDiagnosisSummary(e.target.value)}
               placeholder="e.g. Hypertension Stage 2, Type 2 Diabetes"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
               required
             />
           </div>
 
           <div>
             <label className="text-xs font-bold text-slate-800 block mb-1 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-teal-600" />
+              <Calendar className="w-3.5 h-3.5 text-sky-600" />
               Follow-up Review Date:
             </label>
             <input
               type="date"
               value={followUpDate}
               onChange={(e) => setFollowUpDate(e.target.value)}
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
           </div>
         </div>
@@ -143,13 +143,13 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-              <Pill className="w-3.5 h-3.5 text-teal-600" />
+              <Pill className="w-3.5 h-3.5 text-sky-600" />
               Prescribed Medications:
             </label>
             <button
               type="button"
               onClick={handleAddItem}
-              className="text-xs font-bold text-teal-700 hover:text-teal-900 flex items-center gap-1 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200 transition"
+              className="text-xs font-bold text-sky-700 hover:text-sky-900 flex items-center gap-1 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200 transition"
             >
               <Plus className="w-3.5 h-3.5" />
               Add Medicine
@@ -184,7 +184,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
                     placeholder="Medicine Name (e.g. Metformin)"
                     value={item.medicine_name}
                     onChange={(e) => handleItemChange(idx, 'medicine_name', e.target.value)}
-                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none sm:col-span-2"
+                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-sky-500 focus:outline-none sm:col-span-2"
                     required
                   />
                   <input
@@ -192,7 +192,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
                     placeholder="Dosage (e.g. 500mg)"
                     value={item.dosage}
                     onChange={(e) => handleItemChange(idx, 'dosage', e.target.value)}
-                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none"
+                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-sky-500 focus:outline-none"
                     required
                   />
                 </div>
@@ -201,7 +201,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
                   <select
                     value={item.frequency}
                     onChange={(e) => handleItemChange(idx, 'frequency', e.target.value)}
-                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none"
+                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-sky-500 focus:outline-none"
                   >
                     <option value="Once daily (Morning)">Once daily (Morning)</option>
                     <option value="Twice daily (1-0-1)">Twice daily (1-0-1)</option>
@@ -215,7 +215,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
                     placeholder="Days (e.g. 30)"
                     value={item.duration_days}
                     onChange={(e) => handleItemChange(idx, 'duration_days', Number(e.target.value))}
-                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none"
+                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-sky-500 focus:outline-none"
                   />
 
                   <input
@@ -223,7 +223,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
                     placeholder="Instructions (e.g. after food)"
                     value={item.instructions}
                     onChange={(e) => handleItemChange(idx, 'instructions', e.target.value)}
-                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-teal-500 focus:outline-none"
+                    className="p-2 rounded-lg border border-slate-300 text-xs bg-white focus:ring-1 focus:ring-sky-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -241,7 +241,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
             value={specialInstructions}
             onChange={(e) => setSpecialInstructions(e.target.value)}
             placeholder="e.g. Maintain low sodium diet, avoid sugar, 30m daily morning walk..."
-            className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+            className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
           />
         </div>
 
@@ -257,7 +257,7 @@ export const PrescriptionWriterModal = ({ isOpen, onClose, patient, onSuccess })
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 py-2.5 px-4 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-teal-600/20 transition"
+            className="flex-1 py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 transition"
           >
             <CheckCircle2 className="w-4 h-4" />
             {loading ? 'Issuing Prescription...' : 'Finalize & Sync to Patient'}

@@ -67,7 +67,7 @@ export const AuthorizedPatientsPage = () => {
   if (loading) {
     return (
       <div className="p-8 text-center text-slate-400 space-y-3 animate-pulse">
-        <ShieldCheck className="w-8 h-8 text-teal-600 animate-spin mx-auto" />
+        <ShieldCheck className="w-8 h-8 text-sky-600 animate-spin mx-auto" />
         <div className="text-sm font-bold text-slate-700">Verifying Cryptographic Consent Grant...</div>
         <div className="text-xs text-slate-400">Decrypting authorized medical records...</div>
       </div>
@@ -100,21 +100,21 @@ export const AuthorizedPatientsPage = () => {
     <div className="space-y-6 max-w-6xl mx-auto pb-12">
       
       {/* Patient Header & Quick Clinical Actions */}
-      <div className="bg-gradient-to-r from-teal-950 via-slate-900 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl border border-teal-600/40 shadow-xl space-y-4">
+      <div className="bg-gradient-to-r from-sky-950 via-slate-900 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl border border-sky-600/40 shadow-xl space-y-4">
         
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-teal-700/50 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-sky-700/50 pb-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-teal-500/20 flex items-center justify-center text-teal-300 border border-teal-400/40">
+            <div className="w-12 h-12 rounded-2xl bg-sky-500/20 flex items-center justify-center text-sky-300 border border-sky-400/40">
               <UserCheck className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-bold">{patientName}</h2>
-                <span className="text-xs font-mono bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded border border-teal-500/40 font-bold">
+                <span className="text-xs font-mono bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded border border-sky-500/40 font-bold">
                   HP-2026-1001
                 </span>
               </div>
-              <div className="text-xs text-teal-200 flex items-center gap-2 mt-0.5">
+              <div className="text-xs text-sky-200 flex items-center gap-2 mt-0.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
                 <span>Authorized Categories: {activeConsent?.approved_categories?.map(getCategoryLabel).join(', ')}</span>
               </div>
@@ -122,7 +122,7 @@ export const AuthorizedPatientsPage = () => {
           </div>
 
           <div className="text-right text-xs">
-            <span className="text-[10px] text-teal-400 uppercase font-bold block">Consent Expiry</span>
+            <span className="text-[10px] text-sky-400 uppercase font-bold block">Consent Expiry</span>
             <span className="font-mono font-bold text-slate-200">
               {formatDateTime(activeConsent?.valid_until)}
             </span>
@@ -133,7 +133,7 @@ export const AuthorizedPatientsPage = () => {
         <div className="flex flex-wrap items-center gap-2.5 pt-1">
           <button
             onClick={() => setShowPrescriptionModal(true)}
-            className="px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-md shadow-teal-500/20 transition"
+            className="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-md shadow-sky-500/20 transition"
           >
             <Pill className="w-4 h-4" />
             Write Digital Prescription
@@ -151,7 +151,7 @@ export const AuthorizedPatientsPage = () => {
             onClick={() => setShowTranslator(!showTranslator)}
             className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center gap-2 border border-slate-700 transition"
           >
-            <Languages className="w-4 h-4 text-teal-400" />
+            <Languages className="w-4 h-4 text-sky-400" />
             {showTranslator ? 'Hide Translator' : 'Doctor-Patient Translator (7 Lang)'}
           </button>
         </div>
@@ -199,9 +199,9 @@ export const AuthorizedPatientsPage = () => {
               </span>
             </div>
 
-            <div className="p-3 bg-teal-50 rounded-xl border border-teal-200">
-              <span className="text-[10px] text-teal-700 font-bold uppercase block">Chronic Diagnoses</span>
-              <span className="font-bold text-teal-950 mt-1 block">
+            <div className="p-3 bg-sky-50 rounded-xl border border-sky-200">
+              <span className="text-[10px] text-sky-700 font-bold uppercase block">Chronic Diagnoses</span>
+              <span className="font-bold text-sky-950 mt-1 block">
                 {clinicalSummary.chronic_conditions?.join(', ') || 'None'}
               </span>
             </div>
@@ -221,7 +221,7 @@ export const AuthorizedPatientsPage = () => {
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">
-            <FileText className="w-4 h-4 text-teal-600" />
+            <FileText className="w-4 h-4 text-sky-600" />
             Permitted Medical History & Lab Reports ({records.length})
           </h3>
           <span className="text-xs text-slate-400">Restricted to approved categories</span>
@@ -238,7 +238,7 @@ export const AuthorizedPatientsPage = () => {
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
                     <span className="font-bold text-slate-900">{rec.title}</span>
-                    <span className="px-2 py-0.5 rounded bg-teal-50 text-teal-800 text-[10px] font-semibold border border-teal-200">
+                    <span className="px-2 py-0.5 rounded bg-sky-50 text-sky-800 text-[10px] font-semibold border border-sky-200">
                       {getCategoryLabel(rec.category)}
                     </span>
                   </div>
@@ -252,7 +252,7 @@ export const AuthorizedPatientsPage = () => {
                     href={rec.file_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] font-bold text-teal-600 hover:text-teal-800 pt-1"
+                    className="inline-flex items-center gap-1 text-[11px] font-bold text-sky-600 hover:text-sky-800 pt-1"
                   >
                     <Download className="w-3.5 h-3.5" /> View Original Attached Report
                   </a>

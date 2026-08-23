@@ -66,7 +66,7 @@ export const PatientSettingsPage = () => {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <Settings className="w-5 h-5 text-teal-600" />
+          <Settings className="w-5 h-5 text-sky-600" />
           Patient Account & Privacy Settings
         </h2>
         <p className="text-xs text-slate-500">
@@ -79,7 +79,7 @@ export const PatientSettingsPage = () => {
         {/* Profile Card */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <User className="w-4 h-4 text-teal-600" />
+            <User className="w-4 h-4 text-sky-600" />
             Citizen Profile Information
           </h3>
 
@@ -109,7 +109,7 @@ export const PatientSettingsPage = () => {
         {/* Language Selection */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <Globe className="w-4 h-4 text-teal-600" />
+            <Globe className="w-4 h-4 text-sky-600" />
             Preferred Portal Language
           </h3>
 
@@ -121,7 +121,7 @@ export const PatientSettingsPage = () => {
                 onClick={() => changeLanguage(lang.code)}
                 className={`p-3 rounded-2xl border text-xs font-semibold flex items-center gap-2 transition ${
                   currentLanguage === lang.code
-                    ? 'bg-teal-50 border-teal-400 text-teal-900 shadow-xs'
+                    ? 'bg-sky-50 border-sky-400 text-sky-900 shadow-xs'
                     : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
               >
@@ -138,7 +138,7 @@ export const PatientSettingsPage = () => {
         {/* Notifications & Reminders */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <Bell className="w-4 h-4 text-teal-600" />
+            <Bell className="w-4 h-4 text-sky-600" />
             Notification & Reminder Channels
           </h3>
 
@@ -158,7 +158,7 @@ export const PatientSettingsPage = () => {
                   type="checkbox"
                   checked={n.state}
                   onChange={(e) => n.setter(e.target.checked)}
-                  className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500"
+                  className="w-5 h-5 text-sky-600 rounded focus:ring-sky-500"
                 />
               </div>
             ))}
@@ -168,7 +168,7 @@ export const PatientSettingsPage = () => {
         {/* Security & Multi-Factor */}
         <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-xs space-y-4">
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
-            <Shield className="w-4 h-4 text-teal-600" />
+            <Shield className="w-4 h-4 text-sky-600" />
             Security & Cryptographic Privacy
           </h3>
 
@@ -182,7 +182,7 @@ export const PatientSettingsPage = () => {
                 type="checkbox"
                 checked={twoFactor}
                 onChange={(e) => setTwoFactor(e.target.checked)}
-                className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500"
+                className="w-5 h-5 text-sky-600 rounded focus:ring-sky-500"
               />
             </div>
 
@@ -195,7 +195,7 @@ export const PatientSettingsPage = () => {
                 type="checkbox"
                 checked={emergencyAccess}
                 onChange={(e) => setEmergencyAccess(e.target.checked)}
-                className="w-5 h-5 text-teal-600 rounded focus:ring-teal-500"
+                className="w-5 h-5 text-sky-600 rounded focus:ring-sky-500"
               />
             </div>
           </div>
@@ -206,7 +206,7 @@ export const PatientSettingsPage = () => {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 flex items-center gap-2 transition"
+            className="px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-md shadow-sky-600/20 flex items-center gap-2 transition"
           >
             <Save className="w-4 h-4" />
             {saving ? 'Saving...' : 'Save Settings'}

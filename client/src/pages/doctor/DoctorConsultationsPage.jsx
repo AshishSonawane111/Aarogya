@@ -84,7 +84,7 @@ export const DoctorConsultationsPage = () => {
                   </div>
                 </div>
 
-                <span className="text-[10px] uppercase font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-full border border-teal-200">
+                <span className="text-[10px] uppercase font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-full border border-sky-200">
                   Signed Clinical Note
                 </span>
               </div>

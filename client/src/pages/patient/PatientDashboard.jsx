@@ -14,7 +14,6 @@ import {
   FileText, 
   Sparkles, 
   KeyRound, 
-  Receipt, 
   AlertTriangle, 
   CheckCircle2, 
   Clock, 
@@ -23,7 +22,7 @@ import {
   Phone,
   Droplet
 } from 'lucide-react';
-import { formatDate, formatCurrency, getCategoryLabel } from '../../utils/helpers';
+import { formatDate, getCategoryLabel } from '../../utils/helpers';
 
 export const PatientDashboard = () => {
   const { user, profile } = useAuth();
@@ -69,7 +68,6 @@ export const PatientDashboard = () => {
   const appointments = dashboardData?.upcoming_appointments || [];
   const medicines = dashboardData?.active_medicines || [];
   const recentRecords = dashboardData?.recent_records || [];
-  const bills = dashboardData?.recent_bills || [];
 
   return (
     <div className="space-y-6 pb-12">
@@ -108,25 +106,25 @@ export const PatientDashboard = () => {
       />
 
       {/* AI Health Summary Highlights Banner */}
-      <div className="bg-gradient-to-r from-teal-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden border border-teal-600/30">
+      <div className="bg-gradient-to-r from-sky-900 via-indigo-950 to-slate-900 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden border border-sky-600/30">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div className="space-y-1.5 flex-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-bold uppercase tracking-wider border border-teal-500/30">
-              <Sparkles className="w-3 h-3 text-teal-400" />
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[10px] font-bold uppercase tracking-wider border border-sky-500/30">
+              <Sparkles className="w-3 h-3 text-sky-400" />
               AI Clinical Intelligence
             </div>
             <h3 className="text-lg font-bold">Consolidated AI Health Overview</h3>
             <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
               Synthesized from your complete medical records. Active conditions: <strong>{emergency?.major_conditions?.join(', ') || 'Hypertension'}</strong>. Active daily medications: <strong>{medicines.length} prescribed items</strong>.
             </p>
-            <div className="text-[10px] text-teal-400 font-semibold tracking-wide pt-1">
+            <div className="text-[10px] text-sky-400 font-semibold tracking-wide pt-1">
               AI-GENERATED SUMMARY — VERIFY WITH ORIGINAL MEDICAL RECORDS
             </div>
           </div>
 
           <Link
             to="/patient/ai-summary"
-            className="px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-teal-500/20 transition shrink-0"
+            className="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-sky-500/20 transition shrink-0"
           >
             <span>Explore Full AI Summary</span>
             <ArrowRight className="w-4 h-4" />
@@ -142,12 +140,12 @@ export const PatientDashboard = () => {
           <div>
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center">
                   <Calendar className="w-4 h-4" />
                 </div>
                 <h4 className="font-bold text-sm text-slate-900">Upcoming Visits</h4>
               </div>
-              <Link to="/patient/appointments" className="text-xs font-semibold text-teal-600 hover:text-teal-800">
+              <Link to="/patient/appointments" className="text-xs font-semibold text-sky-600 hover:text-sky-800">
                 Book Slot
               </Link>
             </div>
@@ -162,11 +160,11 @@ export const PatientDashboard = () => {
                   <div key={apt.id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 space-y-1">
                     <div className="flex items-center justify-between text-xs font-bold text-slate-800">
                       <span>{apt.doctor_name}</span>
-                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-teal-100 text-teal-800 font-mono">
+                      <span className="text-[10px] px-2 py-0.5 rounded-md bg-sky-100 text-sky-800 font-mono">
                         {apt.start_time.slice(0, 5)}
                       </span>
                     </div>
-                    <div className="text-[11px] text-teal-700 font-medium">{apt.specialization}</div>
+                    <div className="text-[11px] text-sky-700 font-medium">{apt.specialization}</div>
                     <div className="text-[10px] text-slate-500 flex items-center gap-1">
                       <Clock className="w-3 h-3 text-slate-400" />
                       {formatDate(apt.appointment_date)}

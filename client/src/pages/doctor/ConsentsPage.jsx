@@ -69,7 +69,7 @@ export const ConsentsPage = () => {
                 <tr key={c.id} className="hover:bg-slate-50 transition">
                   <td className="p-4">
                     <div className="font-bold text-slate-900">{c.patient_name}</div>
-                    <div className="text-[10px] text-teal-700 font-mono">{c.health_id_number}</div>
+                    <div className="text-[10px] text-sky-700 font-mono">{c.health_id_number}</div>
                   </td>
 
                   <td className="p-4">
@@ -87,7 +87,7 @@ export const ConsentsPage = () => {
                       <StatusBadge status={c.status} />
                       {c.valid_until && (
                         <div className="text-[10px] text-slate-400 flex items-center gap-1 font-mono">
-                          <Clock className="w-3 h-3 text-teal-600" />
+                          <Clock className="w-3 h-3 text-sky-600" />
                           Exp: {formatDateTime(c.valid_until)}
                         </div>
                       )}
@@ -102,7 +102,7 @@ export const ConsentsPage = () => {
                     {c.status === 'approved' && new Date(c.valid_until) > new Date() ? (
                       <Link
                         to={`/doctor/authorized-patients?patientId=${c.patient_id}`}
-                        className="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs inline-flex items-center gap-1 transition shadow-xs"
+                        className="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs inline-flex items-center gap-1 transition shadow-xs"
                       >
                         <span>Open Records</span>
                         <ArrowRight className="w-3.5 h-3.5" />

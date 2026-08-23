@@ -49,7 +49,7 @@ export const PatientSearchBar = ({ onPatientFound }) => {
       <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-            <Search className="w-4 h-4 text-teal-600" />
+            <Search className="w-4 h-4 text-sky-600" />
             Patient Lookup (Digital Health ID or QR Code)
           </h3>
           <span className="text-[10px] uppercase font-bold text-slate-400">Zero-Trust Protected</span>
@@ -62,7 +62,7 @@ export const PatientSearchBar = ({ onPatientFound }) => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter Health ID e.g. HP-2026-1001 or scan QR data..."
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-sm font-mono focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-sm font-mono focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
           </div>
@@ -70,7 +70,7 @@ export const PatientSearchBar = ({ onPatientFound }) => {
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-xl font-bold text-xs flex items-center gap-2 shadow-md shadow-teal-600/20 transition shrink-0"
+            className="px-6 py-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl font-bold text-xs flex items-center gap-2 shadow-md shadow-sky-600/20 transition shrink-0"
           >
             {loading ? 'Searching...' : 'Identify Patient'}
           </button>
@@ -84,7 +84,7 @@ export const PatientSearchBar = ({ onPatientFound }) => {
               key={id}
               type="button"
               onClick={() => handleQuickDemoSelect(id)}
-              className="px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-teal-50 hover:text-teal-700 font-mono text-[11px] border border-slate-200 transition"
+              className="px-2 py-0.5 rounded-lg bg-slate-100 hover:bg-sky-50 hover:text-sky-700 font-mono text-[11px] border border-slate-200 transition"
             >
               {id}
             </button>
@@ -137,7 +137,7 @@ export const PatientSearchBar = ({ onPatientFound }) => {
                   <h4 className="text-lg font-bold text-slate-900">
                     {searchResult.first_name} {searchResult.last_name}
                   </h4>
-                  <span className="text-xs font-mono font-bold bg-teal-50 text-teal-700 px-2 py-0.5 rounded-lg border border-teal-200">
+                  <span className="text-xs font-mono font-bold bg-sky-50 text-sky-700 px-2 py-0.5 rounded-lg border border-sky-200">
                     {searchResult.health_id_number}
                   </span>
                 </div>
@@ -155,7 +155,7 @@ export const PatientSearchBar = ({ onPatientFound }) => {
                 {searchResult.has_active_consent ? (
                   <a
                     href={`/doctor/authorized-patients?patientId=${searchResult.patient_id}`}
-                    className="px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-teal-600/20 transition w-full sm:w-auto"
+                    className="px-5 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-sky-600/20 transition w-full sm:w-auto"
                   >
                     <span>View Permitted Records</span>
                     <ArrowRight className="w-4 h-4" />

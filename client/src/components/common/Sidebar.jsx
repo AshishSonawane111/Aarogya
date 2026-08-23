@@ -40,9 +40,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
     { to: '/patient/translator', icon: Languages, label: t('translator'), badge: '7 Lang' },
     { to: '/patient/appointments', icon: Calendar, label: t('appointments') },
     { to: '/patient/medicines', icon: Pill, label: t('medicines') },
-    { to: '/patient/emergency', icon: ShieldAlert, label: t('emergency'), alert: true },
+    {to: '/patient/emergency', icon: ShieldAlert, label: t('emergency'), alert: true },
     { to: '/patient/consent', icon: KeyRound, label: t('consentCenter'), highlight: true },
-    { to: '/patient/bills', icon: Receipt, label: t('bills') },
     { to: '/patient/documents', icon: FolderOpen, label: t('documents') },
     { to: '/patient/settings', icon: Settings, label: t('settings') }
   ];
@@ -74,7 +73,6 @@ export const Sidebar = ({ isOpen, onClose }) => {
         />
       )}
 
-      {/* Sidebar Navigation */}
       <aside
         className={`fixed top-0 bottom-0 left-0 w-64 bg-white border-r border-slate-200 z-40 flex flex-col transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
@@ -82,12 +80,12 @@ export const Sidebar = ({ isOpen, onClose }) => {
       >
         {/* Brand Header */}
         <div className="h-16 flex items-center px-6 border-b border-slate-100 gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-teal-600 flex items-center justify-center text-white shadow-sm">
+          <div className="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white shadow-sm">
             <ShieldCheck className="w-5 h-5" />
           </div>
           <div>
             <div className="font-bold text-sm text-slate-900 tracking-tight">HEALTH PASSPORT</div>
-            <div className="text-[10px] text-teal-600 font-semibold uppercase tracking-wider">
+            <div className="text-[10px] text-sky-600 font-semibold uppercase tracking-wider">
               {isPatient ? 'Patient Portal' : 'Doctor Portal'}
             </div>
           </div>
@@ -109,7 +107,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
                 className={({ isActive }) =>
                   `flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition ${
                     isActive
-                      ? 'bg-teal-600 text-white shadow-sm shadow-teal-600/20'
+                      ? 'bg-sky-600 text-white shadow-sm shadow-sky-600/20'
                       : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                   }`
                 }
@@ -136,8 +134,8 @@ export const Sidebar = ({ isOpen, onClose }) => {
         {/* Security Assurance Footer */}
         <div className="p-4 border-t border-slate-100 bg-slate-50/50">
           <div className="bg-white p-3 rounded-xl border border-slate-200 text-[11px] space-y-1">
-            <div className="flex items-center gap-1.5 font-bold text-teal-800">
-              <ShieldCheck className="w-4 h-4 text-teal-600" />
+            <div className="flex items-center gap-1.5 font-bold text-sky-800">
+              <ShieldCheck className="w-4 h-4 text-sky-600" />
               <span>Zero-Trust Security</span>
             </div>
             <p className="text-slate-500 leading-relaxed text-[10px]">

@@ -62,7 +62,7 @@ export const DoctorDashboard = () => {
     <div className="space-y-6 pb-12">
       
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-teal-950 text-white p-6 sm:p-8 rounded-3xl border border-indigo-700/40 shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-950 via-slate-900 to-sky-950 text-white p-6 sm:p-8 rounded-3xl border border-indigo-700/40 shadow-xl relative overflow-hidden">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="space-y-1">
             <span className="text-[10px] uppercase font-bold tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">
@@ -82,7 +82,7 @@ export const DoctorDashboard = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/doctor/patients"
-              className="px-4 py-2.5 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-teal-500/20 transition"
+              className="px-4 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs flex items-center gap-2 shadow-lg shadow-sky-500/20 transition"
             >
               <Search className="w-4 h-4" />
               Patient Health ID Search
@@ -108,9 +108,9 @@ export const DoctorDashboard = () => {
           <div className="text-2xl font-black text-amber-950 mt-1">{pendingConsents.length} Pending</div>
         </div>
 
-        <div className="bg-teal-50/60 p-4 rounded-2xl border border-teal-200 shadow-xs">
-          <span className="text-[10px] uppercase font-bold text-teal-800 block">Upcoming Consultations</span>
-          <div className="text-2xl font-black text-teal-950 mt-1">{upcomingAppointments.length} Booked</div>
+        <div className="bg-sky-50/60 p-4 rounded-2xl border border-sky-200 shadow-xs">
+          <span className="text-[10px] uppercase font-bold text-sky-800 block">Upcoming Consultations</span>
+          <div className="text-2xl font-black text-sky-950 mt-1">{upcomingAppointments.length} Booked</div>
         </div>
       </div>
 
@@ -127,7 +127,7 @@ export const DoctorDashboard = () => {
               <UserCheck className="w-4 h-4 text-emerald-600" />
               Authorized Patient Records ({activePatients.length})
             </h3>
-            <Link to="/doctor/authorized-patients" className="text-xs font-semibold text-teal-600 hover:text-teal-800">
+            <Link to="/doctor/authorized-patients" className="text-xs font-semibold text-sky-600 hover:text-sky-800">
               View All
             </Link>
           </div>
@@ -141,7 +141,7 @@ export const DoctorDashboard = () => {
               {activePatients.map((p) => (
                 <div
                   key={p.consent_id}
-                  className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 hover:border-teal-300 transition flex items-center justify-between gap-3"
+                  className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200 hover:border-sky-300 transition flex items-center justify-between gap-3"
                 >
                   <div className="flex items-center gap-3">
                     <img
@@ -151,7 +151,7 @@ export const DoctorDashboard = () => {
                     />
                     <div>
                       <h4 className="font-bold text-xs text-slate-900">{p.patient_name}</h4>
-                      <div className="text-[10px] text-teal-700 font-mono font-semibold">{p.health_id_number}</div>
+                      <div className="text-[10px] text-sky-700 font-mono font-semibold">{p.health_id_number}</div>
                       <div className="text-[10px] text-slate-500">
                         Permitted: {p.approved_categories?.map(getCategoryLabel).join(', ')}
                       </div>
@@ -160,7 +160,7 @@ export const DoctorDashboard = () => {
 
                   <Link
                     to={`/doctor/authorized-patients?patientId=${p.patient_id}`}
-                    className="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-1 shrink-0 transition"
+                    className="px-3 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center gap-1 shrink-0 transition"
                   >
                     <span>Open File</span>
                     <ArrowRight className="w-3.5 h-3.5" />

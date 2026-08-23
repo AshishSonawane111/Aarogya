@@ -65,7 +65,7 @@ export const ReportExplainerPage = () => {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <FileQuestion className="w-5 h-5 text-teal-600" />
+          <FileQuestion className="w-5 h-5 text-sky-600" />
           AI Medical Report Explainer
         </h2>
         <p className="text-xs text-slate-500">
@@ -95,7 +95,7 @@ export const ReportExplainerPage = () => {
           <div className="flex items-center gap-1.5 text-xs">
             <button
               onClick={() => handleSampleSelect('lipid')}
-              className="px-2.5 py-1 rounded-lg bg-teal-50 hover:bg-teal-100 text-teal-800 font-semibold border border-teal-200 transition"
+              className="px-2.5 py-1 rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-800 font-semibold border border-sky-200 transition"
             >
               Blood Sugar & Lipid Panel
             </button>
@@ -122,7 +122,7 @@ export const ReportExplainerPage = () => {
               value={reportTitle}
               onChange={(e) => setReportTitle(e.target.value)}
               placeholder="e.g. Lipid Profile, Complete Blood Count, Liver Function"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
               required
             />
           </div>
@@ -136,21 +136,21 @@ export const ReportExplainerPage = () => {
               value={reportContent}
               onChange={(e) => setReportContent(e.target.value)}
               placeholder="Paste test values, lab numbers, or scan impression here..."
-              className="w-full p-3 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-3 rounded-xl border border-slate-300 text-xs font-mono focus:ring-2 focus:ring-sky-500 focus:outline-none"
               required
             />
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
             <div className="text-[11px] text-slate-500 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-teal-600" />
+              <Sparkles className="w-4 h-4 text-sky-600" />
               AI transforms numerical laboratory metrics into simple explanations
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs shadow-md shadow-teal-600/20 flex items-center justify-center gap-2 transition"
+              className="w-full sm:w-auto px-6 py-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-md shadow-sky-600/20 flex items-center justify-center gap-2 transition"
             >
               <Sparkles className="w-4 h-4" />
               {loading ? 'Analyzing Diagnostic Data...' : 'Explain Medical Report'}
@@ -161,21 +161,21 @@ export const ReportExplainerPage = () => {
 
       {/* AI Explanation Breakdown Results */}
       {result && (
-        <div className="bg-white rounded-3xl border border-teal-200 shadow-xl overflow-hidden animate-in fade-in-50 space-y-6 p-6 sm:p-8">
+        <div className="bg-white rounded-3xl border border-sky-200 shadow-xl overflow-hidden animate-in fade-in-50 space-y-6 p-6 sm:p-8">
           
           {/* Result Header */}
           <div className="border-b border-slate-100 pb-4">
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-50 text-teal-800 text-xs font-bold uppercase tracking-wider border border-teal-200 mb-2">
-              <Sparkles className="w-3.5 h-3.5 text-teal-600" />
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-sky-800 text-xs font-bold uppercase tracking-wider border border-sky-200 mb-2">
+              <Sparkles className="w-3.5 h-3.5 text-sky-600" />
               AI Diagnostic Breakdown
             </div>
             <h3 className="text-xl font-bold text-slate-900">{result.report_title}</h3>
           </div>
 
           {/* 1. Simplified Plain-English Explanation */}
-          <div className="bg-teal-50/50 p-5 rounded-2xl border border-teal-200 space-y-2">
-            <div className="text-xs font-bold uppercase tracking-wider text-teal-900 flex items-center gap-1.5">
-              <BookOpen className="w-4 h-4 text-teal-700" />
+          <div className="bg-sky-50/50 p-5 rounded-2xl border border-sky-200 space-y-2">
+            <div className="text-xs font-bold uppercase tracking-wider text-sky-900 flex items-center gap-1.5">
+              <BookOpen className="w-4 h-4 text-sky-700" />
               Plain-English Explanation:
             </div>
             <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-medium">

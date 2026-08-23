@@ -143,8 +143,8 @@ export const DoctorAuth = () => {
           </div>
 
           <div className="mt-4 text-center">
-            <Link to="/auth/patient" className="text-xs text-slate-500 hover:text-teal-600 font-medium">
-              Are you a patient? <strong className="text-teal-600">Patient Portal Login</strong>
+            <Link to="/auth/patient" className="text-xs text-slate-500 hover:text-sky-600 font-medium">
+              Are you a patient? <strong className="text-sky-600">Patient Portal Login</strong>
             </Link>
           </div>
 

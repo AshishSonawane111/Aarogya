@@ -37,7 +37,7 @@ export const DocumentsPage = () => {
       {/* Header */}
       <div>
         <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-          <FolderOpen className="w-5 h-5 text-teal-600" />
+          <FolderOpen className="w-5 h-5 text-sky-600" />
           Encrypted Clinical Document Repository
         </h2>
         <p className="text-xs text-slate-500">
@@ -53,7 +53,7 @@ export const DocumentsPage = () => {
             className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between space-y-4"
           >
             <div className="space-y-2">
-              <div className="w-10 h-10 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl bg-sky-50 text-sky-600 flex items-center justify-center">
                 <FileText className="w-5 h-5" />
               </div>
               <h4 className="font-bold text-sm text-slate-900 line-clamp-2">{doc.title}</h4>
@@ -70,7 +70,7 @@ export const DocumentsPage = () => {
               href={doc.file_url}
               target="_blank"
               rel="noreferrer"
-              className="w-full py-2 px-3 rounded-xl bg-slate-50 hover:bg-teal-50 text-teal-700 hover:text-teal-900 border border-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 transition"
+              className="w-full py-2 px-3 rounded-xl bg-slate-50 hover:bg-sky-50 text-sky-700 hover:text-sky-900 border border-slate-200 text-xs font-bold flex items-center justify-center gap-1.5 transition"
             >
               <Download className="w-3.5 h-3.5" /> View / Download File
             </a>

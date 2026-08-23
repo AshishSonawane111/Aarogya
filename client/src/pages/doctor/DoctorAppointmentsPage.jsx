@@ -150,7 +150,7 @@ export const DoctorAppointmentsPage = () => {
                   <div>
                     <div className="flex items-center gap-2">
                       <h4 className="font-bold text-sm text-slate-900">{apt.patient_name}</h4>
-                      <span className="font-mono text-xs text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                      <span className="font-mono text-xs text-sky-700 font-bold bg-sky-50 px-2 py-0.5 rounded border border-sky-200">
                         {apt.health_id_number || 'HP-2026-1001'}
                       </span>
                     </div>

@@ -1,8 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
+import crypto from 'crypto';
 
 dotenv.config();
+
+export const generateEmergencyToken = () => 'emg_' + crypto.randomBytes(16).toString('hex');
 
 // Live Supabase Client Initialization (if credentials exist)
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -224,68 +227,88 @@ const initialData = {
     {
       id: 'eb000000-0000-0000-0000-000000000001',
       patient_id: '10000000-0000-0000-0000-000000000001',
+      qr_token: generateEmergencyToken(),
       verified_blood_group: 'B+',
       allergies: ['Penicillin', 'Peanuts'],
       major_conditions: ['Hypertension Stage 2', 'Type 2 Diabetes'],
       critical_medicines: ['Telmisartan 40mg', 'Metformin 500mg'],
+      emergency_instructions: 'In case of trauma or severe allergic reaction, administer Epinephrine and check for penicillin allergy.',
+      special_precautions: 'Check blood sugar before administering high-dose IV dextrose solution.',
       emergency_contact_name: 'Sunita Kumar',
       emergency_contact_phone: '+91 98201 99001',
       emergency_contact_relation: 'Spouse',
       secondary_contact_name: 'Aakash Kumar',
       secondary_contact_phone: '+91 98201 99009',
       organ_donor: true,
+      updated_at: '2026-08-20T10:30:00Z',
       is_active: true
     },
     {
       id: 'eb000000-0000-0000-0000-000000000002',
       patient_id: '10000000-0000-0000-0000-000000000002',
+      qr_token: generateEmergencyToken(),
       verified_blood_group: 'O+',
       allergies: ['Sulfa Drugs'],
       major_conditions: ['Asthma (Moderate)'],
       critical_medicines: ['Budecort Inhaler 200mcg'],
+      emergency_instructions: 'Asthma exacerbation protocol: Provide Nebulized Salbutamol if in respiratory distress.',
+      special_precautions: 'Avoid non-selective beta-blockers due to bronchospasm risk.',
       emergency_contact_name: 'Rohan Sharma',
       emergency_contact_phone: '+91 98201 99002',
       emergency_contact_relation: 'Brother',
       organ_donor: true,
+      updated_at: '2026-08-18T14:15:00Z',
       is_active: true
     },
     {
       id: 'eb000000-0000-0000-0000-000000000003',
       patient_id: '10000000-0000-0000-0000-000000000003',
+      qr_token: generateEmergencyToken(),
       verified_blood_group: 'A+',
       allergies: ['NSAIDs', 'Aspirin'],
       major_conditions: ['Hypothyroidism'],
       critical_medicines: ['Thyronorm 50mcg'],
+      emergency_instructions: 'Severe pain relief: Use Acetaminophen/Paracetamol instead of NSAIDs or Aspirin.',
+      special_precautions: 'Patient is sensitive to Aspirin-induced asthma.',
       emergency_contact_name: 'Nilesh Desai',
       emergency_contact_phone: '+91 98201 99003',
       emergency_contact_relation: 'Spouse',
       organ_donor: false,
+      updated_at: '2026-08-15T09:00:00Z',
       is_active: true
     },
     {
       id: 'eb000000-0000-0000-0000-000000000004',
       patient_id: '10000000-0000-0000-0000-000000000004',
+      qr_token: generateEmergencyToken(),
       verified_blood_group: 'AB+',
       allergies: ['None known'],
       major_conditions: ['Hyperlipidemia'],
       critical_medicines: ['Atorvastatin 10mg'],
+      emergency_instructions: 'Standard emergency protocols apply.',
+      special_precautions: 'No specific drug interaction alerts.',
       emergency_contact_name: 'Meera Patel',
       emergency_contact_phone: '+91 98201 99004',
       emergency_contact_relation: 'Sister',
       organ_donor: true,
+      updated_at: '2026-08-10T11:45:00Z',
       is_active: true
     },
     {
       id: 'eb000000-0000-0000-0000-000000000005',
       patient_id: '10000000-0000-0000-0000-000000000005',
+      qr_token: generateEmergencyToken(),
       verified_blood_group: 'O-',
       allergies: ['Latex', 'Shellfish'],
       major_conditions: ['Migraine'],
       critical_medicines: ['Sumatriptan 50mg'],
+      emergency_instructions: 'Use non-latex medical gloves during clinical examination and procedures.',
+      special_precautions: 'Latex allergy alert.',
       emergency_contact_name: 'Ananya Singh',
       emergency_contact_phone: '+91 98201 99005',
       emergency_contact_relation: 'Mother',
       organ_donor: true,
+      updated_at: '2026-08-12T16:20:00Z',
       is_active: true
     }
   ],

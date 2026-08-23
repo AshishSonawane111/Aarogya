@@ -88,11 +88,11 @@ export const MedicalRecordsPage = () => {
 
   const getRecordIcon = (category) => {
     switch (category) {
-      case 'lab_reports': return <Activity className="w-5 h-5 text-teal-600" />;
+      case 'lab_reports': return <Activity className="w-5 h-5 text-sky-600" />;
       case 'prescriptions': return <Pill className="w-5 h-5 text-emerald-600" />;
       case 'scans': return <FileCheck className="w-5 h-5 text-indigo-600" />;
       case 'consultations': return <FileText className="w-5 h-5 text-amber-600" />;
-      default: return <FileHeart className="w-5 h-5 text-teal-600" />;
+      default: return <FileHeart className="w-5 h-5 text-sky-600" />;
     }
   };
 
@@ -103,7 +103,7 @@ export const MedicalRecordsPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <FileHeart className="w-5 h-5 text-teal-600" />
+            <FileHeart className="w-5 h-5 text-sky-600" />
             Universal Medical Records Timeline
           </h2>
           <p className="text-xs text-slate-500">
@@ -113,7 +113,7 @@ export const MedicalRecordsPage = () => {
 
         <button
           onClick={() => setShowUploadModal(true)}
-          className="px-4 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-teal-600/20 transition shrink-0"
+          className="px-4 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center gap-2 shadow-md shadow-sky-600/20 transition shrink-0"
         >
           <Upload className="w-4 h-4" />
           Upload Medical Document
@@ -126,7 +126,7 @@ export const MedicalRecordsPage = () => {
           onClick={() => setSelectedCategory('all')}
           className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
             selectedCategory === 'all'
-              ? 'bg-teal-600 text-white shadow-xs'
+              ? 'bg-sky-600 text-white shadow-xs'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
@@ -139,7 +139,7 @@ export const MedicalRecordsPage = () => {
             onClick={() => setSelectedCategory(cat.id)}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${
               selectedCategory === cat.id
-                ? 'bg-teal-600 text-white shadow-xs'
+                ? 'bg-sky-600 text-white shadow-xs'
                 : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
             }`}
           >
@@ -163,19 +163,19 @@ export const MedicalRecordsPage = () => {
             </p>
             <button
               onClick={() => setShowUploadModal(true)}
-              className="px-4 py-2 rounded-xl bg-teal-50 text-teal-700 hover:bg-teal-100 text-xs font-bold inline-flex items-center gap-1.5"
+              className="px-4 py-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 text-xs font-bold inline-flex items-center gap-1.5"
             >
               <Upload className="w-3.5 h-3.5" /> Upload Now
             </button>
           </div>
         ) : (
-          <div className="relative border-l-2 border-teal-200 ml-4 sm:ml-6 space-y-6">
+          <div className="relative border-l-2 border-sky-200 ml-4 sm:ml-6 space-y-6">
             {records.map((rec) => (
               <div key={rec.id} className="relative pl-6 sm:pl-8 group">
                 
                 {/* Timeline Dot */}
-                <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-teal-600 shadow-xs flex items-center justify-center">
-                  <div className="w-1.5 h-1.5 rounded-full bg-teal-600"></div>
+                <div className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-white border-2 border-sky-600 shadow-xs flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-sky-600"></div>
                 </div>
 
                 {/* Card Body */}
@@ -188,7 +188,7 @@ export const MedicalRecordsPage = () => {
                       <div>
                         <h4 className="font-bold text-sm text-slate-900">{rec.title}</h4>
                         <div className="text-[11px] text-slate-500 flex items-center gap-2">
-                          <span className="font-semibold text-teal-700">{getCategoryLabel(rec.category)}</span>
+                          <span className="font-semibold text-sky-700">{getCategoryLabel(rec.category)}</span>
                           <span>•</span>
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3 h-3 text-slate-400" />
@@ -200,7 +200,7 @@ export const MedicalRecordsPage = () => {
 
                     <button
                       onClick={() => setSelectedRecord(rec)}
-                      className="px-3.5 py-1.5 rounded-xl bg-slate-50 hover:bg-teal-50 text-teal-700 hover:text-teal-900 border border-slate-200 text-xs font-bold flex items-center gap-1.5 self-start sm:self-auto transition"
+                      className="px-3.5 py-1.5 rounded-xl bg-slate-50 hover:bg-sky-50 text-sky-700 hover:text-sky-900 border border-slate-200 text-xs font-bold flex items-center gap-1.5 self-start sm:self-auto transition"
                     >
                       <span>View Details</span>
                       <ExternalLink className="w-3.5 h-3.5" />
@@ -262,7 +262,7 @@ export const MedicalRecordsPage = () => {
               value={uploadTitle}
               onChange={(e) => setUploadTitle(e.target.value)}
               placeholder="e.g. Thyroid Profile & Ultrasound Scan"
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
               required
             />
           </div>
@@ -273,7 +273,7 @@ export const MedicalRecordsPage = () => {
               <select
                 value={uploadCategory}
                 onChange={(e) => setUploadCategory(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full p-2.5 rounded-xl border border-slate-300 text-xs bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none"
               >
                 {RECORD_CATEGORIES.filter(c => c.id !== 'complete_record').map((cat) => (
                   <option key={cat.id} value={cat.id}>{cat.label}</option>
@@ -287,7 +287,7 @@ export const MedicalRecordsPage = () => {
                 type="date"
                 value={uploadDate}
                 onChange={(e) => setUploadDate(e.target.value)}
-                className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+                className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
                 required
               />
             </div>
@@ -300,7 +300,7 @@ export const MedicalRecordsPage = () => {
               value={uploadDesc}
               onChange={(e) => setUploadDesc(e.target.value)}
               placeholder="Key notes, doctor observations, or test findings..."
-              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-teal-500 focus:outline-none"
+              className="w-full p-2.5 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-sky-500 focus:outline-none"
             />
           </div>
 
@@ -321,7 +321,7 @@ export const MedicalRecordsPage = () => {
             <button
               type="submit"
               disabled={uploading}
-              className="flex-1 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-md shadow-teal-600/20"
+              className="flex-1 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white text-xs font-bold shadow-md shadow-sky-600/20"
             >
               {uploading ? 'Encrypting & Saving...' : 'Save to Vault'}
             </button>
@@ -334,7 +334,7 @@ export const MedicalRecordsPage = () => {
         <Modal isOpen={!!selectedRecord} onClose={() => setSelectedRecord(null)} title={selectedRecord.title} maxWidth="max-w-2xl">
           <div className="space-y-4">
             <div className="flex items-center justify-between text-xs border-b border-slate-100 pb-3">
-              <span className="font-bold text-teal-700 bg-teal-50 px-2.5 py-1 rounded-lg border border-teal-200">
+              <span className="font-bold text-sky-700 bg-sky-50 px-2.5 py-1 rounded-lg border border-sky-200">
                 {getCategoryLabel(selectedRecord.category)}
               </span>
               <span className="text-slate-500 font-mono">Date: {formatDate(selectedRecord.record_date)}</span>
@@ -345,13 +345,13 @@ export const MedicalRecordsPage = () => {
             </div>
 
             {selectedRecord.file_url && (
-              <div className="p-3 bg-teal-50 rounded-xl border border-teal-200 flex items-center justify-between text-xs">
-                <span className="font-semibold text-teal-900">Original Document Attachment Available</span>
+              <div className="p-3 bg-sky-50 rounded-xl border border-sky-200 flex items-center justify-between text-xs">
+                <span className="font-semibold text-sky-900">Original Document Attachment Available</span>
                 <a
                   href={selectedRecord.file_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="px-3 py-1 bg-teal-600 text-white rounded-lg font-bold flex items-center gap-1.5 hover:bg-teal-700 transition"
+                  className="px-3 py-1 bg-sky-600 text-white rounded-lg font-bold flex items-center gap-1.5 hover:bg-sky-700 transition"
                 >
                   <Download className="w-3.5 h-3.5" /> Download / View File
                 </a>

@@ -72,7 +72,7 @@ export const ConsentCenterPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-            <KeyRound className="w-5 h-5 text-teal-600" />
+            <KeyRound className="w-5 h-5 text-sky-600" />
             Patient Consent & Privacy Management Center
           </h2>
           <p className="text-xs text-slate-500">
@@ -86,7 +86,7 @@ export const ConsentCenterPage = () => {
             onClick={() => setActiveTab('requests')}
             className={`px-4 py-1.5 rounded-lg transition ${
               activeTab === 'requests'
-                ? 'bg-teal-600 text-white shadow-xs'
+                ? 'bg-sky-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -96,7 +96,7 @@ export const ConsentCenterPage = () => {
             onClick={() => setActiveTab('audit')}
             className={`px-4 py-1.5 rounded-lg transition ${
               activeTab === 'audit'
-                ? 'bg-teal-600 text-white shadow-xs'
+                ? 'bg-sky-600 text-white shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -198,7 +198,7 @@ export const ConsentCenterPage = () => {
                         />
                         <div>
                           <h4 className="font-bold text-sm text-slate-900">{act.doctor_name}</h4>
-                          <div className="text-xs text-teal-700 font-semibold">{act.specialization}</div>
+                          <div className="text-xs text-sky-700 font-semibold">{act.specialization}</div>
                         </div>
                       </div>
                       <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
@@ -219,7 +219,7 @@ export const ConsentCenterPage = () => {
 
                     <div className="flex items-center justify-between text-xs pt-1">
                       <span className="text-slate-500 flex items-center gap-1 text-[11px]">
-                        <Clock className="w-3.5 h-3.5 text-teal-600" />
+                        <Clock className="w-3.5 h-3.5 text-sky-600" />
                         Expires: {formatDateTime(act.valid_until)}
                       </span>
 

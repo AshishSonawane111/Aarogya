@@ -41,6 +41,12 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Public Emergency Profile concept endpoint alias
+app.get('/api/emergency-profile/:token', (req, res, next) => {
+  req.url = `/public-emergency/${req.params.token}`;
+  patientRoutes(req, res, next);
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/patients', patientRoutes);

@@ -77,14 +77,14 @@ export const ConsentRequestModal = ({ isOpen, onClose, patient, onSuccess }) => 
       <form onSubmit={handleSubmit} className="space-y-4">
         
         {/* Patient Tag */}
-        <div className="bg-teal-50 p-3.5 rounded-xl border border-teal-200 flex items-center justify-between text-xs">
+        <div className="bg-sky-50 p-3.5 rounded-xl border border-sky-200 flex items-center justify-between text-xs">
           <div>
-            <span className="text-teal-900 font-bold block">
+            <span className="text-sky-900 font-bold block">
               {patient.first_name} {patient.last_name}
             </span>
-            <span className="text-teal-700 font-mono text-[11px]">{patient.health_id_number}</span>
+            <span className="text-sky-700 font-mono text-[11px]">{patient.health_id_number}</span>
           </div>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 font-bold uppercase">
+          <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-100 text-sky-800 font-bold uppercase">
             Patient Identity Confirmed
           </span>
         </div>
@@ -98,7 +98,7 @@ export const ConsentRequestModal = ({ isOpen, onClose, patient, onSuccess }) => 
             <button
               type="button"
               onClick={handleSelectAll}
-              className="text-[11px] text-teal-700 hover:text-teal-900 font-semibold"
+              className="text-[11px] text-sky-700 hover:text-sky-900 font-semibold"
             >
               {selectedCategories.length === RECORD_CATEGORIES.length ? 'Deselect All' : 'Select All'}
             </button>
