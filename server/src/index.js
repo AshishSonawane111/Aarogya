@@ -14,6 +14,8 @@ import aiRoutes from './routes/ai.js';
 import translateRoutes from './routes/translate.js';
 import notificationRoutes from './routes/notifications.js';
 import auditRoutes from './routes/audit.js';
+import clinicalHistoryRoutes from './routes/clinicalHistory.js';
+import ayurvedaRoutes from './routes/ayurveda.js';
 
 import { errorHandler } from './middleware/error.js';
 
@@ -60,6 +62,8 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/translate', translateRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/audit', auditRoutes);
+app.use('/api/clinical-history', clinicalHistoryRoutes);
+app.use('/api/ayurveda', ayurvedaRoutes);
 
 // Error Handling Middleware
 app.use(errorHandler);

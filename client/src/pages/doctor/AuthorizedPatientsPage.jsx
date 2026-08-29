@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { recordAPI, aiAPI, patientAPI } from '../../services/api';
+import { recordAPI, aiAPI, patientAPI, clinicalHistoryAPI } from '../../services/api';
 import { useNotification } from '../../context/NotificationContext';
 import { PrescriptionWriterModal } from '../../components/doctor/PrescriptionWriterModal';
 import { ConsultationModal } from '../../components/doctor/ConsultationModal';
@@ -18,7 +18,12 @@ import {
   Clock, 
   Lock,
   Download,
-  Calendar
+  Calendar,
+  ClipboardList,
+  CheckCircle,
+  Edit3,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { formatDate, formatDateTime, getCategoryLabel } from '../../utils/helpers';
 
@@ -34,6 +39,10 @@ export const AuthorizedPatientsPage = () => {
   const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
   const [showConsultationModal, setShowConsultationModal] = useState(false);
   const [showTranslator, setShowTranslator] = useState(false);
+  const [patientClinicalHistory, setPatientClinicalHistory] = useState(null);
+  const [showClinicalHistory, setShowClinicalHistory] = useState(false);
+  const [verifying, setVerifying] = useState(false);
+  const [doctorNoteInput, setDoctorNoteInput] = useState('');
 
   const fetchAuthorizedData = async () => {
     setLoading(true);
@@ -50,6 +59,15 @@ export const AuthorizedPatientsPage = () => {
         setClinicalSummary(aiRes.data?.summary);
       } catch (aiErr) {
         console.warn('AI Summary unavailable or restricted', aiErr);
+      }
+
+      // 3. Fetch AI Clinical History (Phase 3)
+      try {
+        const histRes = await clinicalHistoryAPI.getPatientHistory(targetPatientId);
+        setPatientClinicalHistory(histRes.data?.latest);
+        setDoctorNoteInput(histRes.data?.latest?.doctor_notes || '');
+      } catch (histErr) {
+        console.warn('Clinical history unavailable', histErr);
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Access Denied: You do not have active consent to view this patient.');
@@ -217,7 +235,117 @@ export const AuthorizedPatientsPage = () => {
         </div>
       )}
 
+      {/* Phase 3: Patient AI Clinical History */}
+      {patientClinicalHistory && (
+        <div className="bg-white rounded-3xl border border-purple-200 shadow-md overflow-hidden">
+          <button
+            onClick={() => setShowClinicalHistory(!showClinicalHistory)}
+            className="w-full flex items-center justify-between p-5 hover:bg-purple-50 transition btn-inline"
+          >
+            <div className="flex items-center gap-3">
+              <ClipboardList className="w-5 h-5 text-purple-600" />
+              <div className="text-left">
+                <div className="font-bold text-sm text-slate-900">Patient Clinical History (AI Intake)</div>
+                <div className="text-xs text-slate-500">
+                  Chief complaint: {patientClinicalHistory.ai_summary?.chief_complaint || patientClinicalHistory.structured?.chiefComplaint || 'Recorded'}
+                  {patientClinicalHistory.verified_by && (
+                    <span className="ml-2 text-emerald-700 font-semibold">✓ Verified by {patientClinicalHistory.verified_by}</span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {patientClinicalHistory.red_flags?.length > 0 && (
+                <span className="text-xs font-bold text-red-700 bg-red-50 border border-red-200 px-2 py-0.5 rounded-full">
+                  ⚠️ {patientClinicalHistory.red_flags.length} red flag(s)
+                </span>
+              )}
+              {showClinicalHistory ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            </div>
+          </button>
+
+          {showClinicalHistory && (
+            <div className="border-t border-purple-100 p-5 space-y-4">
+              <div className="flex items-center gap-2 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl">
+                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                <p className="text-xs font-bold text-amber-900">AI-GENERATED DRAFT — Clinician verification required before use as clinical record.</p>
+              </div>
+
+              {patientClinicalHistory.red_flags?.length > 0 && (
+                <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                  <p className="text-xs font-bold text-red-800 mb-1">⚠️ Red Flags Detected During Intake:</p>
+                  {patientClinicalHistory.red_flags.map((f, i) => (
+                    <p key={i} className="text-xs text-red-700">• {f}</p>
+                  ))}
+                </div>
+              )}
+
+              {patientClinicalHistory.ai_summary && (
+                <div className="space-y-3">
+                  {[
+                    { key: 'chief_complaint', label: 'Chief Complaint', icon: '🩺' },
+                    { key: 'history_of_present_illness', label: 'History of Present Illness', icon: '📖' },
+                    { key: 'past_medical_history', label: 'Past Medical History', icon: '📋' },
+                    { key: 'past_surgical_history', label: 'Past Surgical History', icon: '🏥' },
+                    { key: 'current_medications', label: 'Current Medications', icon: '💊' },
+                    { key: 'allergies', label: 'Allergies', icon: '⚠️' },
+                    { key: 'family_history', label: 'Family History', icon: '👨‍👩‍👧' },
+                    { key: 'personal_history', label: 'Personal & Social History', icon: '🧬' },
+                  ].map(f => (
+                    patientClinicalHistory.ai_summary[f.key] &&
+                    patientClinicalHistory.ai_summary[f.key] !== 'Not recorded' && (
+                      <div key={f.key} className="bg-slate-50 rounded-xl border border-slate-200 px-4 py-3">
+                        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">{f.icon} {f.label}</p>
+                        <p className="text-sm text-slate-800 leading-relaxed">{patientClinicalHistory.ai_summary[f.key]}</p>
+                      </div>
+                    )
+                  ))}
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 block">Doctor Notes / Addendum</label>
+                <textarea
+                  value={doctorNoteInput}
+                  onChange={e => setDoctorNoteInput(e.target.value)}
+                  rows={3}
+                  placeholder="Add clinical notes, corrections, or observations..."
+                  className="w-full px-4 py-3 rounded-xl border-2 border-slate-200 text-sm focus:ring-2 focus:ring-purple-400 focus:border-purple-400 focus:outline-none resize-none"
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={async () => {
+                    setVerifying(true);
+                    try {
+                      await clinicalHistoryAPI.verifySession(patientClinicalHistory.id, {
+                        doctor_notes: doctorNoteInput,
+                      });
+                      setPatientClinicalHistory(prev => ({
+                        ...prev,
+                        status: 'verified',
+                        doctor_notes: doctorNoteInput,
+                        verified_by: 'Doctor',
+                      }));
+                    } catch (e) { console.error(e); }
+                    setVerifying(false);
+                  }}
+                  disabled={verifying || patientClinicalHistory.status === 'verified'}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold transition disabled:opacity-50 btn-inline"
+                >
+                  <CheckCircle className="w-4 h-4" />
+                  {patientClinicalHistory.status === 'verified' ? '✓ Verified' : 'Verify & Sign Off'}
+                </button>
+                <span className="text-xs text-slate-400 self-center">Doctor remains responsible for clinical verification</span>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Permitted Medical Records Timeline */}
+
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-6 space-y-4">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <h3 className="font-bold text-sm text-slate-900 flex items-center gap-2">

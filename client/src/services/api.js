@@ -109,4 +109,27 @@ export const auditAPI = {
   listAuditLogs: () => api.get('/audit')
 };
 
+export const clinicalHistoryAPI = {
+  startSession: () => api.post('/clinical-history/start'),
+  submitAnswer: (sessionId, data) => api.post(`/clinical-history/${sessionId}/answer`, data),
+  getPatientHistory: (patientId) => api.get(`/clinical-history/patient/${patientId}`),
+  completeSession: (sessionId) => api.post(`/clinical-history/${sessionId}/complete`),
+  getSession: (sessionId) => api.get(`/clinical-history/${sessionId}`),
+  verifySession: (sessionId, data) => api.put(`/clinical-history/${sessionId}/verify`, data),
+};
+
+export const ayurvedaAPI = {
+  getProfile: (patientId) => api.get('/ayurveda/profile', { params: { patientId } }),
+  updateProfile: (data) => api.put('/ayurveda/profile', data),
+  getAssessment: (patientId) => api.get(`/ayurveda/assessment/${patientId}`),
+  addAssessment: (data) => api.post('/ayurveda/assessment', data),
+  getMedicines: (patientId) => api.get('/ayurveda/medicines', { params: { patientId } }),
+  addMedicine: (data) => api.post('/ayurveda/medicines', data),
+  toggleMedicine: (id) => api.patch(`/ayurveda/medicines/${id}/toggle`),
+  getTreatments: (patientId) => api.get('/ayurveda/treatments', { params: { patientId } }),
+  addTreatment: (data) => api.post('/ayurveda/treatments', data),
+  getResponses: (patientId) => api.get('/ayurveda/responses', { params: { patientId } }),
+  addResponse: (data) => api.post('/ayurveda/responses', data),
+};
+
 export default api;

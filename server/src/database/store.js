@@ -734,7 +734,15 @@ const initialData = {
       email_alerts: true,
       consultation_buffer_minutes: 5
     }
-  }
+  },
+  // Phase 3: Clinical history sessions (AI-guided intake)
+  clinical_histories: [],
+  // Phase 4: Ayurveda module collections
+  ayurveda_profiles: [],       // one per patient — profile, prakriti, lifestyle
+  ayurveda_assessments: [],    // Dashavidha Pariksha — practitioner recorded
+  ayurveda_medicines: [],      // Ayurvedic medicines — separate from modern
+  ayurveda_treatments: [],     // treatment history entries
+  treatment_responses: []      // before/after outcome records
 };
 
 // In-memory runtime database
