@@ -16,6 +16,7 @@ import notificationRoutes from './routes/notifications.js';
 import auditRoutes from './routes/audit.js';
 import clinicalHistoryRoutes from './routes/clinicalHistory.js';
 import ayurvedaRoutes from './routes/ayurveda.js';
+import timelineRoutes from './routes/timeline.js';
 
 import { errorHandler } from './middleware/error.js';
 
@@ -64,6 +65,7 @@ app.use('/api/notifications', notificationRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/clinical-history', clinicalHistoryRoutes);
 app.use('/api/ayurveda', ayurvedaRoutes);
+app.use('/api/timeline', timelineRoutes);
 
 // Error Handling Middleware
 app.use(errorHandler);

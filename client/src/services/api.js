@@ -91,7 +91,8 @@ export const billAPI = {
 export const aiAPI = {
   getHealthSummary: (patientId) => api.get('/ai/health-summary', { params: { patientId } }),
   getClinicalSummary: (patientId) => api.get(`/ai/clinical-summary/${patientId}`),
-  explainReport: (data) => api.post('/ai/report-explainer', data)
+  explainReport: (data) => api.post('/ai/report-explainer', data),
+  chat: (message, messages) => api.post('/ai/chat', { message, messages })
 };
 
 export const translateAPI = {
@@ -130,6 +131,21 @@ export const ayurvedaAPI = {
   addTreatment: (data) => api.post('/ayurveda/treatments', data),
   getResponses: (patientId) => api.get('/ayurveda/responses', { params: { patientId } }),
   addResponse: (data) => api.post('/ayurveda/responses', data),
+};
+
+export const digitizeAPI = {
+  uploadAndDigitize: (formData) => api.post('/records/digitize', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' }
+  }),
+  getSessions: (patientId) => api.get('/records/digitize/sessions', { params: { patientId } }),
+  getSession: (sessionId) => api.get(`/records/digitize/session/${sessionId}`),
+  updateSession: (sessionId, data) => api.put(`/records/digitize/session/${sessionId}`, data),
+  confirmSession: (sessionId) => api.post(`/records/digitize/session/${sessionId}/confirm`),
+  verifySession: (sessionId, data) => api.put(`/records/digitize/session/${sessionId}/verify`, data)
+};
+
+export const timelineAPI = {
+  getTimeline: (patientId) => api.get('/timeline', { params: { patientId } })
 };
 
 export default api;

@@ -90,7 +90,19 @@ export const UI_TRANSLATIONS = {
     symptomScore: 'Symptom Severity',
     sleepQuality: 'Sleep Quality',
     energyLevel: 'Energy Level',
-    digestion: 'Digestion'
+    digestion: 'Digestion',
+    // Phase 5 — OCR Document Digitisation
+    scanDocument: 'Scan Document',
+    uploadDocument: 'Upload Document',
+    digitizeDocument: 'Digitize Document',
+    originalDocument: 'Original Document',
+    extractedText: 'Extracted Text',
+    abnormalRange: 'Value appears outside the reference range shown on the report. Please discuss with your clinician.',
+    aiDisclaimerOcr: 'AI-assisted parsing — clinician verification required.',
+    confirmDigitization: 'Confirm Digitization',
+    needsVerification: 'Needs Verification',
+    verified: 'Verified',
+    processing: 'Processing...'
   },
   hi: {
     appName: 'हेल्थ पासपोर्ट',
@@ -177,7 +189,19 @@ export const UI_TRANSLATIONS = {
     symptomScore: 'लक्षण ग्रेड',
     sleepQuality: 'नींद की गुणवत्ता',
     energyLevel: 'उर्जा स्तर',
-    digestion: 'पाचन'
+    digestion: 'पाचन',
+    // Phase 5 — OCR Document Digitisation
+    scanDocument: 'दस्तावेज़ स्कैन करें',
+    uploadDocument: 'दस्तावेज़ अपलोड करें',
+    digitizeDocument: 'दस्तावेज़ डिजिटाइज़ करें',
+    originalDocument: 'मूल दस्तावेज़',
+    extractedText: 'निकाला गया टेक्स्ट',
+    abnormalRange: 'मूल्य रिपोर्ट पर दिखाए गए संदर्भ सीमा से बाहर दिखाई देता है। कृपया अपने चिकित्सक से चर्चा करें।',
+    aiDisclaimerOcr: 'एआई-सहायता प्राप्त पार्सिंग — चिकित्सक सत्यापन आवश्यक।',
+    confirmDigitization: 'डिजिटलीकरण की पुष्टि करें',
+    needsVerification: 'सत्यापन की आवश्यकता है',
+    verified: 'सत्यापित',
+    processing: 'प्रसंस्करण हो रहा है...'
   },
   mr: {
     appName: 'हेल्थ पासपोर्ट',
@@ -264,7 +288,19 @@ export const UI_TRANSLATIONS = {
     symptomScore: 'लक्षण तीव्रता',
     sleepQuality: 'झोपेची गुणवत्ता',
     energyLevel: 'उर्जा पातळी',
-    digestion: 'पचन'
+    digestion: 'पचन',
+    // Phase 5 — OCR Document Digitisation
+    scanDocument: 'दस्तऐवज स्कॅन करा',
+    uploadDocument: 'दस्तऐवज अपलोड करा',
+    digitizeDocument: 'दस्तऐवज डिजिटायझ करा',
+    originalDocument: 'मूळ दस्तऐवज',
+    extractedText: 'काढलेला मजकूर',
+    abnormalRange: 'मूल्य अहवालात दर्शविलेल्या संदर्भ श्रेणीबाहेर दिसत आहे. कृपया आपल्या डॉक्टरांशी चर्चा करा.',
+    aiDisclaimerOcr: 'एआय-सहाय्यक पार्सिंग — चिकित्सक सत्यापन आवश्यक.',
+    confirmDigitization: 'डिजिटायझेशनची पुष्टी करा',
+    needsVerification: 'पडताळणी आवश्यक आहे',
+    verified: 'सत्यापित',
+    processing: 'प्रक्रिया चालू आहे...'
   },
   gu: {
     appName: 'હેલ્થ પાસપોર્ટ',

@@ -742,7 +742,8 @@ const initialData = {
   ayurveda_assessments: [],    // Dashavidha Pariksha — practitioner recorded
   ayurveda_medicines: [],      // Ayurvedic medicines — separate from modern
   ayurveda_treatments: [],     // treatment history entries
-  treatment_responses: []      // before/after outcome records
+  treatment_responses: [],     // before/after outcome records
+  document_digitizations: []   // Phase 5: Document digitization & OCR sessions
 };
 
 // In-memory runtime database

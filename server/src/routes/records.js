@@ -1,7 +1,11 @@
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { db, checkActiveConsent, recordAuditLog, createNotification } from '../database/store.js';
-import { authenticate } from '../middleware/auth.js';
+import { authenticate, requireRole } from '../middleware/auth.js';
+import multer from 'multer';
+import fs from 'fs';
+import path from 'path';
+import { performOCR, extractClinicalEntities } from '../services/ocrService.js';
 
 const router = express.Router();
 
@@ -383,6 +387,289 @@ router.post('/consultation', authenticate, (req, res) => {
     message: 'Consultation note recorded in patient timeline',
     record: newRecord
   });
+});
+
+// ─── PHASE 5: MEDICAL DOCUMENT DIGITIZATION + OCR + DOCUMENT INTELLIGENCE ───
+
+// Multer setup for secure local storage uploads
+const UPLOADS_DIR = './uploads';
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, UPLOADS_DIR),
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({
+  storage,
+  limits: { fileSize: 25 * 1024 * 1024 }, // 25MB limit
+  fileFilter: (req, file, cb) => {
+    const allowed = ['.pdf', '.png', '.jpg', '.jpeg', '.webp'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!allowed.includes(ext)) {
+      return cb(new Error('Only PDF, JPG, PNG, WEBP files are allowed.'));
+    }
+    cb(null, true);
+  }
+});
+
+// Helper: Map document type string to db category
+function mapDocTypeToCategory(type) {
+  switch (type) {
+    case 'prescription':
+    case 'ayurvedic_prescription':
+      return 'prescriptions';
+    case 'lab_report':
+      return 'lab_reports';
+    case 'imaging_report':
+      return 'scans';
+    case 'discharge_summary':
+      return 'hospital_records';
+    case 'ayurvedic_treatment':
+      return 'consultations';
+    default:
+      return 'medical_history';
+  }
+}
+
+// 1. POST /digitize — Upload file + perform OCR + clinical entity extraction
+router.post('/digitize', authenticate, upload.single('file'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'Please upload a medical document file (PDF, JPG, PNG, WEBP).' });
+    }
+
+    const { document_type = 'lab_report', preferred_language = 'en' } = req.body;
+    const patientId = req.user.role === 'patient' ? req.patient.id : req.body.patient_id;
+
+    if (!patientId) {
+      return res.status(400).json({ error: 'Patient ID is required.' });
+    }
+
+    const patient = db.patients.find(p => p.id === patientId);
+    if (!patient) return res.status(404).json({ error: 'Patient not found.' });
+
+    // 1. Run OCR (extract raw text)
+    const ocrResult = await performOCR(req.file.path, req.file.originalname, preferred_language);
+
+    // 2. Interpret and structure text
+    const extraction = await extractClinicalEntities(ocrResult.raw_text, document_type, patient);
+
+    // 3. Create Digitization Session
+    const session = {
+      id: uuidv4(),
+      patient_id: patientId,
+      status: 'extracted',
+      document_type,
+      file_name: req.file.filename,
+      original_name: req.file.originalname,
+      file_type: req.file.mimetype,
+      file_size_bytes: req.file.size,
+      file_url: `/api/records/file/${req.file.filename}`,
+      raw_text: ocrResult.raw_text,
+      confidence: ocrResult.confidence,
+      extracted_data: extraction.structured,
+      confidence_ratings: extraction.confidence_ratings,
+      patient_verified: false,
+      doctor_verified: false,
+      doctor_notes: null,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    };
+
+    db.document_digitizations.unshift(session);
+
+    // Audit log
+    recordAuditLog({
+      patient_id: patientId,
+      actor_id: req.user.id,
+      actor_role: req.user.role,
+      actor_name: req.user.role === 'patient' ? `${req.patient.first_name} ${req.patient.last_name}` : `Dr. ${req.doctor?.first_name} ${req.doctor?.last_name}`,
+      action: 'digitize_document',
+      category_accessed: mapDocTypeToCategory(document_type),
+      ip_address: req.ip || '127.0.0.1',
+      details: { session_id: session.id, file_name: req.file.originalname }
+    });
+
+    res.json({
+      success: true,
+      message: 'Document uploaded and text extracted successfully.',
+      session
+    });
+
+  } catch (err) {
+    console.error('[Digitize Error]', err);
+    res.status(500).json({ error: err.message || 'Failed to digitize medical document.' });
+  }
+});
+
+// 2. GET /digitize/sessions — List all digitisation sessions for the patient
+router.get('/digitize/sessions', authenticate, (req, res) => {
+  const patientId = req.user.role === 'patient' ? req.patient.id : req.query.patientId;
+  if (!patientId) return res.status(400).json({ error: 'patientId is required.' });
+
+  const sessions = db.document_digitizations
+    .filter(s => s.patient_id === patientId)
+    .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  res.json({ success: true, sessions });
+});
+
+// 3. GET /digitize/session/:sessionId — Get details of a single session
+router.get('/digitize/session/:sessionId', authenticate, (req, res) => {
+  const session = db.document_digitizations.find(s => s.id === req.params.sessionId);
+  if (!session) return res.status(404).json({ error: 'Digitization session not found.' });
+
+  res.json({ success: true, session });
+});
+
+// 4. PUT /digitize/session/:sessionId — Patient edits/corrects extracted data
+router.put('/digitize/session/:sessionId', authenticate, (req, res) => {
+  const session = db.document_digitizations.find(s => s.id === req.params.sessionId);
+  if (!session) return res.status(404).json({ error: 'Digitization session not found.' });
+
+  const { extracted_data, status } = req.body;
+  if (extracted_data) {
+    session.extracted_data = { ...session.extracted_data, ...extracted_data };
+  }
+  if (status) {
+    session.status = status;
+  }
+  session.updated_at = new Date().toISOString();
+
+  res.json({ success: true, message: 'Extracted data updated successfully.', session });
+});
+
+// 5. POST /digitize/session/:sessionId/confirm — Confirm and write to medical timeline
+router.post('/digitize/session/:sessionId/confirm', authenticate, (req, res) => {
+  const session = db.document_digitizations.find(s => s.id === req.params.sessionId);
+  if (!session) return res.status(404).json({ error: 'Digitization session not found.' });
+
+  session.status = 'verified';
+  session.patient_verified = true;
+  session.updated_at = new Date().toISOString();
+
+  const recordId = uuidv4();
+  const category = mapDocTypeToCategory(session.document_type);
+
+  const newRecord = {
+    id: recordId,
+    patient_id: session.patient_id,
+    doctor_id: null,
+    hospital_id: null,
+    category,
+    title: session.extracted_data.summary || `Digitized ${session.document_type}`,
+    description: session.extracted_data.summary || `Digitized report of type ${session.document_type}`,
+    record_date: session.extracted_data.record_date || new Date().toISOString().split('T')[0],
+    file_url: session.file_url,
+    file_type: session.file_type.includes('pdf') ? 'pdf' : 'image',
+    file_size_bytes: session.file_size_bytes,
+    metadata: {
+      digitization_session_id: session.id,
+      doctor_name: session.extracted_data.doctor_name,
+      hospital_name: session.extracted_data.hospital_name,
+      findings: session.extracted_data.findings || [],
+      medicines: session.extracted_data.medicines || [],
+      treatments: session.extracted_data.treatments || []
+    },
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
+  };
+
+  db.medical_records.unshift(newRecord);
+
+  // Sync to doc repository as well if Category is lab_reports
+  if (category === 'lab_reports') {
+    db.documents.push({
+      id: uuidv4(),
+      patient_id: session.patient_id,
+      title: newRecord.title,
+      document_type: 'Lab Report',
+      file_url: session.file_url,
+      created_at: new Date().toISOString(),
+      file_size_bytes: session.file_size_bytes
+    });
+  }
+
+  // Audit log
+  recordAuditLog({
+    patient_id: session.patient_id,
+    actor_id: req.user.id,
+    actor_role: req.user.role,
+    actor_name: req.user.role === 'patient' ? 'Patient' : 'Clinician',
+    action: 'confirm_digitized_document',
+    category_accessed: category,
+    ip_address: req.ip || '127.0.0.1',
+    details: { session_id: session.id, record_id: recordId }
+  });
+
+  res.json({
+    success: true,
+    message: 'Medical document finalized and recorded in health timeline.',
+    record: newRecord
+  });
+});
+
+// 6. PUT /digitize/session/:sessionId/verify — Doctor / Vaidya verifies & edits
+router.put('/digitize/session/:sessionId/verify', authenticate, requireRole(['doctor']), (req, res) => {
+  const session = db.document_digitizations.find(s => s.id === req.params.sessionId);
+  if (!session) return res.status(404).json({ error: 'Digitization session not found.' });
+
+  const { doctor_notes, edited_data } = req.body;
+  const doctor = req.doctor;
+
+  if (edited_data) {
+    session.extracted_data = { ...session.extracted_data, ...edited_data };
+  }
+  session.doctor_notes = doctor_notes || null;
+  session.doctor_verified = true;
+  session.status = 'verified';
+  session.updated_at = new Date().toISOString();
+
+  // Find corresponding medical record and verify it too
+  const record = db.medical_records.find(r => r.metadata?.digitization_session_id === session.id);
+  if (record) {
+    record.doctor_id = doctor.id;
+    record.metadata.verified_by_doctor = `Dr. ${doctor.first_name} ${doctor.last_name}`;
+    record.metadata.doctor_notes = doctor_notes;
+    record.metadata.findings = session.extracted_data.findings || [];
+    record.metadata.medicines = session.extracted_data.medicines || [];
+    record.metadata.treatments = session.extracted_data.treatments || [];
+    record.updated_at = new Date().toISOString();
+  }
+
+  // Audit log
+  recordAuditLog({
+    patient_id: session.patient_id,
+    actor_id: req.user.id,
+    actor_role: 'doctor',
+    actor_name: `Dr. ${doctor.first_name} ${doctor.last_name}`,
+    action: 'doctor_verify_document',
+    category_accessed: mapDocTypeToCategory(session.document_type),
+    ip_address: req.ip || '127.0.0.1',
+    details: { session_id: session.id }
+  });
+
+  res.json({
+    success: true,
+    message: 'Document clinical verification complete.',
+    session
+  });
+});
+
+// 7. GET /file/:fileName — Private download of uploaded file
+router.get('/file/:fileName', authenticate, (req, res) => {
+  const { fileName } = req.params;
+  const filePath = path.join(UPLOADS_DIR, fileName);
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'File not found.' });
+  }
+  res.sendFile(path.resolve(filePath));
 });
 
 export default router;

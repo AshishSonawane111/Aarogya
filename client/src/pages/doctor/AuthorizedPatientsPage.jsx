@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { recordAPI, aiAPI, patientAPI, clinicalHistoryAPI } from '../../services/api';
+import { recordAPI, aiAPI, patientAPI, clinicalHistoryAPI, digitizeAPI } from '../../services/api';
 import { useNotification } from '../../context/NotificationContext';
 import { PrescriptionWriterModal } from '../../components/doctor/PrescriptionWriterModal';
 import { ConsultationModal } from '../../components/doctor/ConsultationModal';
@@ -39,10 +39,28 @@ export const AuthorizedPatientsPage = () => {
   const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
   const [showConsultationModal, setShowConsultationModal] = useState(false);
   const [showTranslator, setShowTranslator] = useState(false);
+  
+  // Phase 3 state
   const [patientClinicalHistory, setPatientClinicalHistory] = useState(null);
   const [showClinicalHistory, setShowClinicalHistory] = useState(false);
   const [verifying, setVerifying] = useState(false);
   const [doctorNoteInput, setDoctorNoteInput] = useState('');
+
+  // Phase 5 state
+  const [digitizationSessions, setDigitizationSessions] = useState([]);
+  const [showDigitizationCenter, setShowDigitizationCenter] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState(null);
+  const [docNotesInput, setDocNotesInput] = useState('');
+  const [verifyingDocSession, setVerifyingDocSession] = useState(false);
+  const [docEditForm, setDocEditForm] = useState({
+    doctor_name: '',
+    hospital_name: '',
+    record_date: '',
+    summary: '',
+    medicines: [],
+    findings: [],
+    treatments: []
+  });
 
   const fetchAuthorizedData = async () => {
     setLoading(true);
@@ -68,6 +86,14 @@ export const AuthorizedPatientsPage = () => {
         setDoctorNoteInput(histRes.data?.latest?.doctor_notes || '');
       } catch (histErr) {
         console.warn('Clinical history unavailable', histErr);
+      }
+
+      // 4. Fetch Digitization Sessions (Phase 5)
+      try {
+        const digRes = await digitizeAPI.getSessions(targetPatientId);
+        setDigitizationSessions(digRes.data?.sessions || []);
+      } catch (digErr) {
+        console.warn('Digitization sessions unavailable', digErr);
       }
     } catch (err) {
       setError(err.response?.data?.error || 'Access Denied: You do not have active consent to view this patient.');
@@ -339,6 +365,269 @@ export const AuthorizedPatientsPage = () => {
                 </button>
                 <span className="text-xs text-slate-400 self-center">Doctor remains responsible for clinical verification</span>
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Phase 5: Digitized Documents Verification Center */}
+      {digitizationSessions.length > 0 && (
+        <div className="bg-white rounded-3xl border border-indigo-200 shadow-md overflow-hidden">
+          <button
+            onClick={() => setShowDigitizationCenter(!showDigitizationCenter)}
+            className="w-full flex items-center justify-between p-5 hover:bg-indigo-50/50 transition btn-inline"
+          >
+            <div className="flex items-center gap-3">
+              <FileText className="w-5 h-5 text-indigo-600" />
+              <div className="text-left">
+                <div className="font-bold text-sm text-slate-900 font-display">Digitized Documents Verification Center</div>
+                <div className="text-xs text-slate-500">
+                  {digitizationSessions.filter(s => s.status !== 'verified').length} pending clinician review &amp; sign-off
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              {showDigitizationCenter ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            </div>
+          </button>
+
+          {showDigitizationCenter && (
+            <div className="border-t border-indigo-100 p-5 space-y-5">
+              <div className="flex items-start gap-2.5 px-4 py-3 bg-amber-50 border border-amber-200 rounded-xl">
+                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                <p className="text-xs font-bold text-amber-900">
+                  CLINICAL VERIFICATION REQUIRED — Review extracted parameters, edit inaccuracies, and sign off below.
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {digitizationSessions.map((session) => {
+                  const isEditing = editingSessionId === session.id;
+                  const docVerified = session.doctor_verified || session.status === 'verified';
+                  return (
+                    <div key={session.id} className={`p-4 rounded-2xl border ${docVerified ? 'border-emerald-200 bg-emerald-50/10' : 'border-slate-200 bg-slate-50/50'} space-y-3`}>
+                      
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-base">📄</span>
+                          <span className="font-bold text-xs text-slate-800">{session.original_name}</span>
+                          <span className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded border ${
+                            docVerified ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-amber-50 text-amber-700 border-amber-200'
+                          }`}>
+                            {docVerified ? 'Verified' : 'Needs Verification'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2 text-xs">
+                          <a href={session.file_url} target="_blank" rel="noreferrer" className="text-sky-600 font-semibold hover:underline">
+                            View Original File
+                          </a>
+                          {!docVerified && !isEditing && (
+                            <button
+                              onClick={() => {
+                                setEditingSessionId(session.id);
+                                setDocEditForm(session.extracted_data);
+                                setDocNotesInput(session.doctor_notes || '');
+                              }}
+                              className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-[10px] transition"
+                            >
+                              Review &amp; Edit
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Display Mode */}
+                      {!isEditing && (
+                        <div className="space-y-2 text-xs">
+                          <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-500">
+                            <div><span className="font-semibold text-slate-700">Practitioner:</span> {session.extracted_data.doctor_name}</div>
+                            <div><span className="font-semibold text-slate-700">Clinic:</span> {session.extracted_data.hospital_name}</div>
+                            <div><span className="font-semibold text-slate-700">Date:</span> {session.extracted_data.record_date}</div>
+                            <div><span className="font-semibold text-slate-700">Summary:</span> {session.extracted_data.summary}</div>
+                          </div>
+
+                          {/* Medicines */}
+                          {session.extracted_data.medicines?.length > 0 && (
+                            <div className="bg-emerald-50/20 p-2.5 rounded-xl border border-emerald-100">
+                              <span className="text-[10px] uppercase font-bold text-emerald-800 tracking-wider">Detected Medicines:</span>
+                              <div className="flex flex-wrap gap-1.5 mt-1">
+                                {session.extracted_data.medicines.map((m, idx) => (
+                                  <span key={idx} className="bg-white border border-emerald-200 px-2 py-0.5 rounded text-[10px] font-semibold text-emerald-950">
+                                    {m.name || m.medicine_name} ({m.dosage}) — {m.frequency}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Findings */}
+                          {session.extracted_data.findings?.length > 0 && (
+                            <div className="bg-sky-50/20 p-2.5 rounded-xl border border-sky-100">
+                              <span className="text-[10px] uppercase font-bold text-sky-800 tracking-wider">Detected Lab Parameters:</span>
+                              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 mt-1">
+                                {session.extracted_data.findings.map((f, idx) => (
+                                  <div key={idx} className="bg-white p-1 rounded border border-slate-200">
+                                    <span className="text-[9px] text-slate-400 block truncate">{f.param}</span>
+                                    <span className={`font-bold ${f.status === 'high' || f.status === 'low' ? 'text-rose-600' : 'text-slate-800'}`}>
+                                      {f.value} {f.unit}
+                                    </span>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Doctor verification feedback */}
+                          {session.doctor_verified && (
+                            <div className="bg-purple-50 p-2 rounded-xl border border-purple-100 text-purple-950">
+                              <span className="font-bold block text-[10px] text-purple-700">⚕️ Clinician Notes:</span>
+                              <p className="mt-0.5">{session.doctor_notes || 'No feedback notes entered.'}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Editing Mode */}
+                      {isEditing && (
+                        <div className="space-y-3 bg-white p-4 rounded-xl border border-slate-200 text-xs">
+                          <div className="font-bold text-xs text-indigo-900 flex items-center gap-1">
+                            <Edit3 className="w-3.5 h-3.5" />
+                            <span>Verification Editor</span>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-2.5">
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Practitioner Name</label>
+                              <input type="text" value={docEditForm.doctor_name} onChange={e => setDocEditForm(prev => ({ ...prev, doctor_name: e.target.value }))} className="w-full p-2 border rounded-lg text-xs" />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Clinic / Hospital</label>
+                              <input type="text" value={docEditForm.hospital_name} onChange={e => setDocEditForm(prev => ({ ...prev, hospital_name: e.target.value }))} className="w-full p-2 border rounded-lg text-xs" />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Record Date</label>
+                              <input type="date" value={docEditForm.record_date} onChange={e => setDocEditForm(prev => ({ ...prev, record_date: e.target.value }))} className="w-full p-2 border rounded-lg text-xs" />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Summary / Findings Title</label>
+                              <input type="text" value={docEditForm.summary} onChange={e => setDocEditForm(prev => ({ ...prev, summary: e.target.value }))} className="w-full p-2 border rounded-lg text-xs" />
+                            </div>
+                          </div>
+
+                          {/* Editable Findings */}
+                          {docEditForm.findings?.length > 0 && (
+                            <div className="space-y-1.5 pt-2">
+                              <span className="font-bold text-[10px] text-slate-600 block">Edit Extracted Values:</span>
+                              {docEditForm.findings.map((f, fIdx) => (
+                                <div key={fIdx} className="grid grid-cols-3 gap-1.5 items-center">
+                                  <span className="font-semibold text-slate-700">{f.param}:</span>
+                                  <input type="text" value={f.value} onChange={e => {
+                                    const updated = [...docEditForm.findings];
+                                    updated[fIdx].value = e.target.value;
+                                    setDocEditForm(prev => ({ ...prev, findings: updated }));
+                                  }} className="p-1 border rounded text-xs text-center font-bold" />
+                                  <span className="text-slate-400">{f.unit}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Editable Medicines */}
+                          {docEditForm.medicines?.length > 0 && (
+                            <div className="space-y-1.5 pt-2">
+                              <span className="font-bold text-[10px] text-slate-600 block">Edit Prescribed Meds:</span>
+                              {docEditForm.medicines.map((m, mIdx) => (
+                                <div key={mIdx} className="grid grid-cols-2 gap-1.5">
+                                  <input type="text" value={m.name || m.medicine_name} onChange={e => {
+                                    const updated = [...docEditForm.medicines];
+                                    updated[mIdx].name = e.target.value;
+                                    setDocEditForm(prev => ({ ...prev, medicines: updated }));
+                                  }} className="p-1 border rounded text-xs" placeholder="Med Name" />
+                                  <input type="text" value={m.dosage} onChange={e => {
+                                    const updated = [...docEditForm.medicines];
+                                    updated[mIdx].dosage = e.target.value;
+                                    setDocEditForm(prev => ({ ...prev, medicines: updated }));
+                                  }} className="p-1 border rounded text-xs" placeholder="Dosage" />
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Doctor Feedback Notes */}
+                          <div>
+                            <label className="text-[10px] font-bold text-slate-500 block mb-0.5">Doctor Verification Notes</label>
+                            <textarea
+                              rows={2}
+                              value={docNotesInput}
+                              onChange={e => setDocNotesInput(e.target.value)}
+                              placeholder="Clinical remarks, Titrations, or Verification logs..."
+                              className="w-full p-2 border rounded-lg text-xs resize-none"
+                            />
+                          </div>
+
+                          <div className="flex gap-2 pt-1 border-t border-slate-100">
+                            <button
+                              onClick={async () => {
+                                setVerifyingDocSession(true);
+                                try {
+                                  await digitizeAPI.verifySession(session.id, {
+                                    doctor_notes: docNotesInput,
+                                    edited_data: docEditForm
+                                  });
+                                  addToast({
+                                    title: 'Verification Complete',
+                                    message: 'Extracted values approved and signed off.',
+                                    type: 'success'
+                                  });
+                                  setEditingSessionId(null);
+                                  fetchAuthorizedData();
+                                } catch (e) {
+                                  addToast({
+                                    title: 'Verification Failed',
+                                    message: 'Error verifying document extraction.',
+                                    type: 'error'
+                                  });
+                                } finally {
+                                  setVerifyingDocSession(false);
+                                }
+                              }}
+                              disabled={verifyingDocSession}
+                              className="flex-1 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold flex items-center justify-center gap-1 btn-inline"
+                            >
+                              <CheckCircle className="w-3.5 h-3.5" /> Sign Off &amp; Verify
+                            </button>
+                            <button
+                              onClick={async () => {
+                                try {
+                                  await digitizeAPI.updateSession(session.id, { status: 'failed' });
+                                  addToast({
+                                    title: 'Extraction Rejected',
+                                    message: 'Document extraction rejected.',
+                                    type: 'info'
+                                  });
+                                  setEditingSessionId(null);
+                                  fetchAuthorizedData();
+                                } catch (e) { console.error(e); }
+                              }}
+                              className="px-4 py-2 border border-slate-200 text-slate-600 rounded-xl font-semibold hover:bg-slate-50 transition btn-inline"
+                            >
+                              Reject
+                            </button>
+                            <button
+                              onClick={() => setEditingSessionId(null)}
+                              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl font-semibold btn-inline"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      
+                    </div>
+                  );
+                })}
+              </div>
+
             </div>
           )}
         </div>
