@@ -148,27 +148,51 @@ function buildPatientContext(patientId) {
   const recentRecords = records
     .sort((a, b) => new Date(b.record_date) - new Date(a.record_date))
     .slice(0, 5)
-    .map(r => `• ${r.title} (${r.category}, ${r.record_date}): ${r.description || 'No description'}`)
+    .map(r => `• ${r.title || 'Untitled Record'} (${r.category || 'General'}, ${r.record_date || 'Date not recorded'}): ${r.description || 'No description available'}`)
     .join('\n');
 
   const medicinesList = medicines.length > 0
-    ? medicines.map(m => `• ${m.medicine_name} ${m.dosage} — ${m.frequency} (${m.purpose || 'General use'})`).join('\n')
+    ? medicines.map(m => {
+        const name = m.name || m.medicine_name || 'Medicine name not recorded';
+        const dosage = m.dosage && !name.toLowerCase().includes(m.dosage.toLowerCase()) ? ` ${m.dosage}` : '';
+        const frequency = m.frequency ? ` — ${m.frequency}` : '';
+        const purpose = m.purpose ? ` (${m.purpose})` : ' (General use)';
+        return `• ${name}${dosage}${frequency}${purpose}`;
+      }).join('\n')
     : '• No active allopathic medicines recorded';
 
   const ayurvedaMedsList = ayurvedaMeds.length > 0
-    ? ayurvedaMeds.map(m => `• ${m.medicine_name} — ${m.dosage || ''} (${m.anupana || 'as directed'})`).join('\n')
+    ? ayurvedaMeds.map(m => {
+        const name = m.name || m.medicine_name || 'Medicine name not recorded';
+        const dosage = (m.dose || m.dosage) && !name.toLowerCase().includes((m.dose || m.dosage).toLowerCase()) ? ` — ${m.dose || m.dosage}` : '';
+        const duration = m.duration || m.anupana ? ` (${m.duration || m.anupana})` : ' (as directed)';
+        return `• ${name}${dosage}${duration}`;
+      }).join('\n')
     : '• No active Ayurvedic medicines';
 
   const upcomingAppointments = appointments.length > 0
-    ? appointments.map(a => `• ${a.appointment_date} with Dr. ${a.doctor_name || 'Unknown'} — ${a.purpose || 'Consultation'} [${a.status}]`).join('\n')
+    ? appointments.map(a => {
+        const doc = db.doctors.find(d => d.id === a.doctor_id);
+        const doctorName = doc ? `Dr. ${doc.first_name} ${doc.last_name}` : 'Unknown Doctor';
+        const apptDate = a.appointment_date || 'Date not recorded';
+        const apptPurpose = a.chief_complaint || a.purpose || 'Consultation';
+        const apptStatus = a.status || 'scheduled';
+        return `• ${apptDate} with ${doctorName} — ${apptPurpose} [${apptStatus}]`;
+      }).join('\n')
     : '• No upcoming appointments on record';
 
   const allergies = emergency?.allergies?.join(', ') || 'None documented';
   const conditions = emergency?.major_conditions?.join(', ') || 'None documented';
 
+  // Ayurveda Profile confirmed values
+  const prakritiVal = ayurvedaProfile ? (ayurvedaProfile.vaidya_prakriti || ayurvedaProfile.reported_prakriti || 'Not assessed') : 'Not assessed';
+  const vikritiVal = ayurvedaProfile ? (ayurvedaProfile.vaidya_vikriti || ayurvedaProfile.reported_vikriti || 'Not assessed') : 'Not assessed';
+  const agniVal = ayurvedaProfile ? (ayurvedaProfile.agni || 'Not assessed') : 'Not assessed';
+  const koshthaVal = ayurvedaProfile ? (ayurvedaProfile.koshtha || 'Not assessed') : 'Not assessed';
+
   return `
 === PATIENT HEALTH PASSPORT CONTEXT ===
-Patient: ${patient.first_name} ${patient.last_name}, ${patient.gender || 'Gender not specified'}, DOB: ${patient.dob || 'Unknown'}
+Patient: ${patient.first_name || ''} ${patient.last_name || ''}, ${patient.gender || 'Gender not specified'}, DOB: ${patient.dob || 'Unknown'}
 Blood Group: ${emergency?.blood_group || patient.blood_group || 'Not recorded'}
 Known Allergies: ${allergies}
 Chronic Conditions: ${conditions}
@@ -180,7 +204,7 @@ ${medicinesList}
 ${ayurvedaMedsList}
 
 --- Ayurveda Profile ---
-${ayurvedaProfile ? `Prakriti: ${ayurvedaProfile.prakriti || 'Not assessed'} | Agni: ${ayurvedaProfile.agni || 'Not assessed'} | Koshtha: ${ayurvedaProfile.koshtha || 'Not assessed'}` : 'Not assessed'}
+Prakriti: ${prakritiVal} | Vikriti: ${vikritiVal} | Agni: ${agniVal} | Koshtha: ${koshthaVal}
 
 --- Recent Medical Records (last 5) ---
 ${recentRecords || '• No records on file'}
@@ -217,15 +241,21 @@ function ruleBasedChatResponse(message, patientContext, patientId) {
     }
     let reply = `Here are your currently active medicines from your Health Passport, ${name}:\n\n`;
     if (medicines.length > 0) {
-      reply += `Allopathic Medicines:\n`;
+      reply += `**Allopathic Medicines:**\n`;
       medicines.forEach(m => {
-        reply += `• ${m.medicine_name} ${m.dosage} — ${m.frequency}\n  Purpose: ${m.purpose || 'As prescribed'}\n`;
+        const medName = m.name || m.medicine_name || 'Medicine name not recorded';
+        const dosage = m.dosage && !medName.toLowerCase().includes(m.dosage.toLowerCase()) ? ` ${m.dosage}` : '';
+        const frequency = m.frequency ? ` — ${m.frequency}` : '';
+        const purpose = m.purpose ? `\n  Purpose: ${m.purpose}` : '\n  Purpose: As prescribed';
+        reply += `• ${medName}${dosage}${frequency}${purpose}\n`;
       });
     }
     if (ayurvedaMeds.length > 0) {
-      reply += `\nAyurvedic Medicines:\n`;
+      reply += `\n**Ayurvedic Medicines:**\n`;
       ayurvedaMeds.forEach(m => {
-        reply += `• ${m.medicine_name} — ${m.dosage || 'As directed'}\n`;
+        const medName = m.name || m.medicine_name || 'Medicine name not recorded';
+        const dosage = (m.dose || m.dosage) && !medName.toLowerCase().includes((m.dose || m.dosage).toLowerCase()) ? ` — ${m.dose || m.dosage}` : '';
+        reply += `• ${medName}${dosage}\n`;
       });
     }
     reply += `\n⚠️ This information is from your Health Passport records. Always verify your current medicines with your prescribing doctor or pharmacist.`;
@@ -238,7 +268,7 @@ function ruleBasedChatResponse(message, patientContext, patientId) {
     if (allergies.length === 0) {
       return `No allergies are currently recorded in your Health Passport, ${name}.\n\nIf you have known allergies, please update your Emergency Profile — this is critical information for emergency care.\n\n⚠️ Verify your allergy list with your doctor.`;
     }
-    return `Your recorded allergies in your Health Passport, ${name}:\n\n${allergies.map(a => `• ${a}`).join('\n')}\n\n⚠️ Please verify this list with your doctor to ensure it is complete and up to date.`;
+    return `Your recorded allergies in your Health Passport, ${name}:\n\n${allergies.map(a => `• ${a || 'Unknown Allergy'}`).join('\n')}\n\n⚠️ Please verify this list with your doctor to ensure it is complete and up to date.`;
   }
 
   // Condition / diagnosis questions
@@ -247,7 +277,7 @@ function ruleBasedChatResponse(message, patientContext, patientId) {
     if (conditions.length === 0) {
       return `No chronic conditions are recorded in your Health Passport currently, ${name}.\n\nIf you have been diagnosed with any conditions, please update your health profile.\n\n⚠️ AI-assisted information — always verify with your healthcare provider.`;
     }
-    return `Your documented conditions in your Health Passport, ${name}:\n\n${conditions.map(c => `• ${c}`).join('\n')}\n\n⚠️ This is informational. Discuss your diagnoses and management plan with your doctor.`;
+    return `Your documented conditions in your Health Passport, ${name}:\n\n${conditions.map(c => `• ${c || 'Unknown Condition'}`).join('\n')}\n\n⚠️ This is informational. Discuss your diagnoses and management plan with your doctor.`;
   }
 
   // Appointment questions
@@ -257,9 +287,17 @@ function ruleBasedChatResponse(message, patientContext, patientId) {
     }
     const upcoming = appointments.filter(a => a.status === 'scheduled').slice(0, 3);
     if (upcoming.length === 0) {
-      return `No upcoming scheduled appointments found, ${name}. Your most recent appointment was:\n\n• ${appointments[0].appointment_date} — ${appointments[0].purpose || 'Consultation'} [${appointments[0].status}]\n\nYou can book a new appointment from the Appointments section.`;
+      const lastAppt = appointments[0];
+      const doc = db.doctors.find(d => d.id === lastAppt.doctor_id);
+      const doctorName = doc ? `Dr. ${doc.first_name} ${doc.last_name}` : 'Unknown Doctor';
+      return `No upcoming scheduled appointments found, ${name}. Your most recent appointment was:\n\n• ${lastAppt.appointment_date || 'Date not recorded'} with ${doctorName} — ${lastAppt.chief_complaint || lastAppt.purpose || 'Consultation'} [${lastAppt.status || 'completed'}]\n\nYou can book a new appointment from the Appointments section.`;
     }
-    return `Your upcoming appointments, ${name}:\n\n${upcoming.map(a => `• ${a.appointment_date} — ${a.purpose || 'Consultation'} [${a.status}]`).join('\n')}\n\n💡 Bring your Health Passport QR code and a list of current symptoms to your appointment.`;
+    const upcomingList = upcoming.map(a => {
+      const doc = db.doctors.find(d => d.id === a.doctor_id);
+      const doctorName = doc ? `Dr. ${doc.first_name} ${doc.last_name}` : 'Unknown Doctor';
+      return `• ${a.appointment_date || 'Date not recorded'} with ${doctorName} — ${a.chief_complaint || a.purpose || 'Consultation'} [${a.status || 'scheduled'}]`;
+    }).join('\n');
+    return `Your upcoming appointments, ${name}:\n\n${upcomingList}\n\n💡 Bring your Health Passport QR code and a list of current symptoms to your appointment.`;
   }
 
   // Records / history summary
@@ -274,22 +312,22 @@ function ruleBasedChatResponse(message, patientContext, patientId) {
     
     let reply = `Here is a summary of your recent health records, ${name}:\n\n`;
     recentRecords.forEach(r => {
-      reply += `• ${r.title} (${r.record_date})\n  Category: ${r.category}\n  ${r.description ? r.description.slice(0, 100) : 'No description'}...\n\n`;
+      reply += `• **${r.title || 'Untitled Record'}** (${r.record_date || 'Date not recorded'})\n  Category: ${r.category || 'General'}\n  ${r.description ? r.description.slice(0, 100) : 'No description available'}...\n\n`;
     });
-    reply += `Total records on file: ${records.length}\n\n⚠️ AI-assisted summary — verify all information with your healthcare providers.`;
+    reply += `📋 Total records on file: ${records.length}\n\n⚠️ AI-assisted summary — verify all information with your healthcare providers.`;
     return reply;
   }
 
   // Doctor visit preparation
   if (lower.includes('prepar') || lower.includes('bring') || lower.includes('visit') || lower.includes('checklist')) {
-    return `Here's a personalised checklist for your next doctor visit, ${name}:\n\n✅ Your Health Passport QR Code — share it with your doctor for instant access\n✅ Current Medicines — ${medicines.length} active medicines recorded\n✅ Known Allergies — ${emergency?.allergies?.join(', ') || 'None recorded'}\n✅ Recent Lab Reports — bring any reports from the last 3 months\n✅ Symptom List — note any new or worsening symptoms\n✅ Questions for your doctor — write them down beforehand\n\n💡 Your doctor can scan your Health Passport QR to instantly view your authorized records.`;
+    return `Here's a personalised checklist for your next doctor visit, ${name}:\n\n✅ **Your Health Passport QR Code** — share it with your doctor for instant access\n✅ **Current Medicines** — ${medicines.length} active medicines recorded\n✅ **Known Allergies** — ${emergency?.allergies?.join(', ') || 'None recorded'}\n✅ **Recent Lab Reports** — bring any reports from the last 3 months\n✅ **Symptom List** — note any new or worsening symptoms\n✅ **Questions for your doctor** — write them down beforehand\n\n💡 Your doctor can scan your Health Passport QR to instantly view your authorized records.`;
   }
 
   // Blood group
   if (lower.includes('blood') && (lower.includes('group') || lower.includes('type'))) {
     const bg = emergency?.blood_group || patient?.blood_group;
     if (!bg) return `Your blood group is not recorded in your Health Passport, ${name}. Please update your Emergency Profile with this important information.`;
-    return `Your blood group recorded in your Health Passport is: ${bg}, ${name}.\n\n⚠️ Always verify with a clinical blood test before any medical procedure.`;
+    return `Your blood group recorded in your Health Passport is: **${bg}**, ${name}.\n\n⚠️ Always verify with a clinical blood test before any medical procedure.`;
   }
 
   // Ayurveda questions
@@ -298,12 +336,16 @@ function ruleBasedChatResponse(message, patientContext, patientId) {
     if (!ayurvedaProfile) {
       return `No Ayurvedic profile has been set up yet, ${name}.\n\nYou can access your complete Ayurveda module from the 🌿 Ayurveda section in your Health Passport, including:\n• Prakriti (constitution) assessment\n• Dosha analysis\n• Ayurvedic medicine tracking\n• Treatment protocols`;
     }
-    return `Your Ayurvedic profile, ${name}:\n\n• Prakriti (Constitution): ${ayurvedaProfile.prakriti || 'Not assessed'}\n• Agni (Digestive Fire): ${ayurvedaProfile.agni || 'Not assessed'}\n• Koshtha: ${ayurvedaProfile.koshtha || 'Not assessed'}\n\nActive Ayurvedic medicines: ${ayurvedaMeds.length}\n\n🌿 View full details in the Ayurveda section.\n\n⚠️ Ayurvedic information is supplementary — always consult a qualified Vaidya.`;
+    const prakriti = ayurvedaProfile.vaidya_prakriti || ayurvedaProfile.reported_prakriti || 'Not assessed';
+    const vikriti = ayurvedaProfile.vaidya_vikriti || ayurvedaProfile.reported_vikriti || 'Not assessed';
+    const agni = ayurvedaProfile.agni || 'Not assessed';
+    const koshtha = ayurvedaProfile.koshtha || 'Not assessed';
+    return `Your Ayurvedic profile, ${name}:\n\n• **Prakriti (Constitution):** ${prakriti}\n• **Vikriti (State):** ${vikriti}\n• **Agni (Digestive Fire):** ${agni}\n• **Koshtha:** ${koshtha}\n\nActive Ayurvedic medicines: ${ayurvedaMeds.length}\n\n🌿 View full details in the Ayurveda section.\n\n⚠️ Ayurvedic information is supplementary — always consult a qualified Vaidya.`;
   }
 
   // Emergency / safety questions
   if (lower.includes('emergency') || lower.includes('urgent') || lower.includes('crisis')) {
-    return `If this is a medical emergency, please act immediately:\n\n📞 Call 112 (Emergency Services)\n🚑 Ambulance: 102\n🏥 Go to the nearest hospital emergency department\n\nYour Health Passport Emergency Profile contains your critical medical information for first responders.\n\nBlood Group: ${emergency?.blood_group || 'Not recorded'}\nAllergies: ${emergency?.allergies?.join(', ') || 'None recorded'}\nCritical Medicines: ${emergency?.critical_medicines?.join(', ') || 'None recorded'}\n\n⚠️ Do not rely on AI during a medical emergency. Call for professional help immediately.`;
+    return `If this is a medical emergency, please act immediately:\n\n📞 **Call 112** (Emergency Services)\n🚑 **Ambulance: 102**\n🏥 Go to the nearest hospital emergency department\n\nYour Health Passport Emergency Profile contains your critical medical information for first responders.\n\nBlood Group: ${emergency?.blood_group || 'Not recorded'}\nAllergies: ${emergency?.allergies?.join(', ') || 'None recorded'}\nCritical Medicines: ${emergency?.critical_medicines?.join(', ') || 'None recorded'}\n\n⚠️ Do not rely on AI during a medical emergency. Call for professional help immediately.`;
   }
 
   // Lab results questions
@@ -313,11 +355,11 @@ function ruleBasedChatResponse(message, patientContext, patientId) {
       return `No lab reports or scans are currently in your Health Passport, ${name}.\n\nYou can upload your lab reports in the 📄 Reports & Documents section. Our AI can then help explain the findings.`;
     }
     const latest = labRecords.sort((a, b) => new Date(b.record_date) - new Date(a.record_date))[0];
-    return `Your most recent lab report: ${latest.title} (${latest.record_date})\n\n${latest.description || 'No description available.'}\n\n📄 You can use the AI Report Explainer in the AI Health Summary section to get a plain-language explanation of any report.\n\n⚠️ Lab results should always be interpreted by your doctor in the context of your full clinical picture.`;
+    return `Your most recent lab report: **${latest.title || 'Untitled Report'}** (${latest.record_date || 'Date not recorded'})\n\n${latest.description || 'No description available.'}\n\n📄 You can use the AI Report Explainer in the AI Health Summary section to get a plain-language explanation of any report.\n\n⚠️ Lab results should always be interpreted by your doctor in the context of your full clinical picture.`;
   }
 
   // Generic helpful response
-  return `Thank you for your question, ${name}. I'm your AI Health Assistant, and I have access to your Health Passport data.\n\nI can help you with:\n• 💊 Your medicines — "What medicines am I taking?"\n• 🩺 Your conditions — "What conditions do I have?"\n• 📋 Health summary — "Summarize my health records"\n• 📅 Appointments — "When is my next appointment?"\n• 🌿 Ayurveda — "What is my Prakriti?"\n• 🚑 Emergency info — "What is my blood group?"\n• 📄 Lab reports — "Explain my latest lab results"\n\n⚠️ I provide informational summaries only. All medical decisions should be made by your qualified healthcare professional.`;
+  return `Thank you for your question, ${name}. I'm your AI Health Assistant, and I have access to your Health Passport data.\n\nI can help you with:\n• 💊 **Your medicines** — "What medicines am I taking?"\n• 🩺 **Your conditions** — "What conditions do I have?"\n• 📋 **Health summary** — "Summarize my health records"\n• 📅 **Appointments** — "When is my next appointment?"\n• 🌿 **Ayurveda** — "What is my Prakriti?"\n• 🚑 **Emergency info** — "What is my blood group?"\n• 📄 **Lab reports** — "Explain my latest lab results"\n\n⚠️ I provide informational summaries only. All medical decisions should be made by your qualified healthcare professional.`;
 }
 
 /**
