@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,6 +9,7 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: var(--hp-base-font, 1rem);
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -16,6 +19,33 @@
   * {
     box-sizing: border-box;
   }
+}
+
+/* ========================
+   Accessibility — Text Size
+   Controlled by AccessibilityContext via class on <html>
+   ======================== */
+html.acc-font-normal {
+  --hp-base-font: 1rem;
+  font-size: 16px;
+}
+html.acc-font-large {
+  --hp-base-font: 1.125rem;
+  font-size: 18px;
+}
+html.acc-font-xl {
+  --hp-base-font: 1.25rem;
+  font-size: 20px;
+}
+
+/* Minimum 48px touch targets for interactive elements */
+button, [role="button"], a {
+  min-height: 44px;
+  min-width: 44px;
+}
+button.btn-inline, a.link-inline {
+  min-height: unset;
+  min-width: unset;
 }
 
 /* ========================

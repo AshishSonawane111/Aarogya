@@ -28,7 +28,18 @@ export const UI_TRANSLATIONS = {
     approve: 'Approve',
     deny: 'Deny',
     revoke: 'Revoke',
-    aiDisclaimer: 'AI-GENERATED SUMMARY — VERIFY WITH ORIGINAL MEDICAL RECORDS'
+    aiDisclaimer: 'AI-GENERATED SUMMARY — VERIFY WITH ORIGINAL MEDICAL RECORDS',
+    // New 8-section dashboard keys
+    myHealth: 'My Health',
+    medicalHistory: 'Medical History',
+    ayurveda: 'Ayurveda',
+    healthTimeline: 'Health Timeline',
+    aiAssistant: 'AI Health Assistant',
+    sharePassport: 'Share Health Passport',
+    ayurvedaDisclaimer: 'Ayurvedic assessment — practitioner verification required',
+    redFlag: 'Possible urgent symptom — contact hospital immediately',
+    listen: 'Listen',
+    speak: 'Speak'
   },
   hi: {
     appName: 'हेल्थ पासपोर्ट',
@@ -54,7 +65,17 @@ export const UI_TRANSLATIONS = {
     approve: 'स्वीकार करें',
     deny: 'अस्वीकार करें',
     revoke: 'वापस लें',
-    aiDisclaimer: 'एआई जनरेटेड सारांश — मूल चिकित्सा रिकॉर्ड से सत्यापित करें'
+    aiDisclaimer: 'एआई जनरेटेड सारांश — मूल चिकित्सा रिकॉर्ड से सत्यापित करें',
+    myHealth: 'मेरा स्वास्थ्य',
+    medicalHistory: 'चिकित्सा इतिहास',
+    ayurveda: 'आयुर्वेद',
+    healthTimeline: 'स्वास्थ्य समयरेखा',
+    aiAssistant: 'एआई स्वास्थ्य सहायक',
+    sharePassport: 'हेल्थ पासपोर्ट साझा करें',
+    ayurvedaDisclaimer: 'आयुर्वेदिक मूल्यांकन — चिकित्सक सत्यापन आवश्यक',
+    redFlag: 'संभावित आपातकालीन लक्षण — तुरंत अस्पताल से संपर्क करें',
+    listen: 'सुनें',
+    speak: 'बोलें'
   },
   mr: {
     appName: 'हेल्थ पासपोर्ट',
@@ -78,9 +99,19 @@ export const UI_TRANSLATIONS = {
     switchPersona: 'प्रोफाइल बदला',
     requestAccess: 'प्रवेश विनंती करा',
     approve: 'मंजूर करा',
+    myHealth: 'माझे आरोग्य',
+    medicalHistory: 'वैद्यकीय इतिहास',
+    ayurveda: 'आयुर्वेद',
+    healthTimeline: 'आरोग्य कालरेषा',
+    aiAssistant: 'एआय आरोग्य सहाय्यक',
+    sharePassport: 'हेल्थ पासपोर्ट शेअर करा',
+    ayurvedaDisclaimer: 'आयुर्वेदिक मूल्यांकन — वैद्य सत्यापन आवश्यक',
+    redFlag: 'तातडीचे लक्षण असू शकते — त्वरित रुग्णालयाशी संपर्क करा',
     deny: 'नाकारा',
     revoke: 'रद्द करा',
-    aiDisclaimer: 'एआय जनरेट केलेला सारांश — मूळ वैद्यकीय नोंदींसह सत्यापित करा'
+    aiDisclaimer: 'एआय जनरेट केलेला सारांश — मूळ वैद्यकीय नोंदींसह सत्यापित करा',
+    listen: 'ऐका',
+    speak: 'बोला'
   },
   gu: {
     appName: 'હેલ્થ પાસપોર્ટ',
