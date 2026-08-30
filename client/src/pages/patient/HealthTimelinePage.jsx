@@ -435,9 +435,14 @@ export const HealthTimelinePage = () => {
                           <div key={i} className="p-3 border border-emerald-100 bg-emerald-50/10 rounded-2xl flex items-start gap-2.5">
                             <span className="text-base mt-0.5">💊</span>
                             <div>
-                              <span className="font-bold text-slate-800 block text-xs">{m.name} ({m.dosage})</span>
-                              <span className="text-[10px] text-slate-500 block">Freq: {m.frequency} | Dur: {m.duration_days ? `${m.duration_days} days` : 'Ongoing'}</span>
-                              {m.instructions && <span className="text-[10px] text-sky-700 font-semibold block mt-0.5">Inst: {m.instructions}</span>}
+                              <span className="font-bold text-slate-800 block text-xs">
+                                {m.name || m.medicine_name || 'Medicine name not recorded'}
+                                {m.dosage ? ` (${m.dosage})` : ''}
+                              </span>
+                              <span className="text-[10px] text-slate-500 block">
+                                Freq: {m.frequency || 'Not specified'} | Dur: {m.duration || 'Ongoing'}
+                              </span>
+                              {m.instructions && <span className="text-[10px] text-sky-700 font-semibold block mt-0.5">Instructions: {m.instructions}</span>}
                             </div>
                           </div>
                         ))}
@@ -556,27 +561,101 @@ export const HealthTimelinePage = () => {
               {/* Case 5: Medicine Details */}
               {selectedEvent.type === 'medicine' && (
                 <div className="space-y-4 text-xs">
-                  <div className="bg-slate-50 p-4 border border-slate-200 rounded-2xl space-y-2">
-                    <div className="flex justify-between border-b pb-1.5 text-slate-500">
-                      <span>Dose Regimen:</span>
-                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.dosage}</span>
+                  <div className="bg-emerald-50/30 border border-emerald-100 rounded-2xl p-4 space-y-2.5">
+                    <div className="flex justify-between border-b border-emerald-100 pb-2 text-slate-500">
+                      <span>Medicine Name:</span>
+                      <span className="font-bold text-slate-800 text-right max-w-[200px]">
+                        {selectedEvent.metadata?.medicine_name || selectedEvent.title?.replace('Medicine Added: ', '') || 'Not recorded'}
+                      </span>
                     </div>
-                    <div className="flex justify-between border-b pb-1.5 text-slate-500">
+                    <div className="flex justify-between border-b border-emerald-100 pb-2 text-slate-500">
+                      <span>Dose Regimen:</span>
+                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.dosage || 'Not recorded'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-emerald-100 pb-2 text-slate-500">
                       <span>Frequency:</span>
-                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.frequency}</span>
+                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.frequency || 'Not specified'}</span>
                     </div>
                     {selectedEvent.metadata?.route && (
-                      <div className="flex justify-between border-b pb-1.5 text-slate-500">
-                        <span>Route of Administration:</span>
+                      <div className="flex justify-between border-b border-emerald-100 pb-2 text-slate-500">
+                        <span>Route:</span>
                         <span className="font-bold text-slate-800">{selectedEvent.metadata.route}</span>
                       </div>
                     )}
-                    {selectedEvent.metadata?.duration_days && (
-                      <div className="flex justify-between border-b pb-1.5 text-slate-500">
-                        <span>Duration:</span>
-                        <span className="font-bold text-slate-800">{selectedEvent.metadata.duration_days} days</span>
+                    <div className="flex justify-between border-b border-emerald-100 pb-2 text-slate-500">
+                      <span>Duration:</span>
+                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.duration || 'Ongoing'}</span>
+                    </div>
+                    {selectedEvent.metadata?.start_date && (
+                      <div className="flex justify-between border-b border-emerald-100 pb-2 text-slate-500">
+                        <span>Started:</span>
+                        <span className="font-bold text-slate-800">{selectedEvent.metadata.start_date}</span>
                       </div>
                     )}
+                    <div className="flex justify-between border-b border-emerald-100 pb-2 text-slate-500">
+                      <span>Prescribed By:</span>
+                      <span className="font-bold text-slate-800 text-right max-w-[200px]">{selectedEvent.metadata?.prescription_source || 'Not specified'}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-500">
+                      <span>Status:</span>
+                      <span className={`font-bold ${selectedEvent.metadata?.is_active ? 'text-emerald-700' : 'text-slate-500'}`}>
+                        {selectedEvent.metadata?.is_active ? '✅ Active' : '⏸ Completed'}
+                      </span>
+                    </div>
+                  </div>
+                  {selectedEvent.metadata?.safety_notes && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-2xl p-3">
+                      <span className="text-[10px] font-bold text-amber-700 block mb-1 uppercase">⚠️ Safety Notes</span>
+                      <p className="text-xs text-amber-900">{selectedEvent.metadata.safety_notes}</p>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Case 6: Appointment Details — was missing, now added */}
+              {selectedEvent.type === 'appointment' && (
+                <div className="space-y-4 text-xs">
+                  <div className="bg-blue-50/30 border border-blue-100 rounded-2xl p-4 space-y-2.5">
+                    <div className="flex justify-between border-b border-blue-100 pb-2 text-slate-500">
+                      <span>Doctor:</span>
+                      <span className="font-bold text-slate-800 text-right">{selectedEvent.metadata?.doctor_name || 'Not specified'}</span>
+                    </div>
+                    {selectedEvent.metadata?.specialization && (
+                      <div className="flex justify-between border-b border-blue-100 pb-2 text-slate-500">
+                        <span>Specialization:</span>
+                        <span className="font-bold text-slate-800">{selectedEvent.metadata.specialization}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between border-b border-blue-100 pb-2 text-slate-500">
+                      <span>Hospital / Clinic:</span>
+                      <span className="font-bold text-slate-800 text-right max-w-[200px]">{selectedEvent.metadata?.hospital_name || 'Not specified'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-blue-100 pb-2 text-slate-500">
+                      <span>Date:</span>
+                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.appointment_date || selectedEvent.date}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-blue-100 pb-2 text-slate-500">
+                      <span>Time:</span>
+                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.time_slot || 'Not specified'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-blue-100 pb-2 text-slate-500">
+                      <span>Type:</span>
+                      <span className="font-bold text-slate-800">{selectedEvent.metadata?.consultation_type_label || 'In-Person'}</span>
+                    </div>
+                    <div className="flex justify-between text-slate-500">
+                      <span>Status:</span>
+                      <span className={`font-bold capitalize ${
+                        selectedEvent.status === 'completed' ? 'text-emerald-700' :
+                        selectedEvent.status === 'cancelled' ? 'text-rose-600' :
+                        'text-blue-700'
+                      }`}>
+                        {selectedEvent.metadata?.status || selectedEvent.status || 'Scheduled'}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3">
+                    <span className="text-[10px] font-bold text-slate-500 block mb-1 uppercase">🩺 Chief Complaint / Reason</span>
+                    <p className="text-xs text-slate-800 font-medium">{selectedEvent.metadata?.chief_complaint || 'General Consultation'}</p>
                   </div>
                 </div>
               )}

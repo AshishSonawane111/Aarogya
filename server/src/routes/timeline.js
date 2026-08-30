@@ -53,8 +53,8 @@ router.get('/', authenticate, (req, res) => {
         type: 'medical_record',
         icon,
         title: r.title || 'Medical Record',
-        subtitle: r.category.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()),
-        description: r.description || '',
+        subtitle: (r.category || 'general').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase()),
+        description: r.description || 'No description available',
         status,
         metadata: {
           file_url: r.file_url,
@@ -62,7 +62,13 @@ router.get('/', authenticate, (req, res) => {
           doctor_name: r.metadata?.doctor_name || 'Not detected',
           hospital_name: r.metadata?.hospital_name || 'Not detected',
           findings: r.metadata?.findings || [],
-          medicines: r.metadata?.medicines || [],
+          medicines: (r.metadata?.medicines || []).map(m => ({
+            name: m.name || m.medicine_name || 'Medicine name not recorded',
+            dosage: m.dosage || 'Not recorded',
+            frequency: m.frequency || 'Not specified',
+            duration: m.duration || (m.duration_days ? `${m.duration_days} days` : 'Ongoing'),
+            instructions: m.instructions || null
+          })),
           treatments: r.metadata?.treatments || [],
           verified_by_doctor: r.metadata?.verified_by_doctor
         }
@@ -79,9 +85,9 @@ router.get('/', authenticate, (req, res) => {
         icon: '🌿',
         title: 'Ayurvedic Consultation',
         subtitle: 'Dashavidha Pariksha Assessment',
-        description: `Vaidya assessment completed. Prakriti: ${a.assessment_data?.prakriti || 'Vata-Pitta'}, Vikriti: ${a.assessment_data?.vikriti || 'Pitta'}`,
+        description: `Vaidya assessment completed. Prakriti: ${a.assessment_data?.prakriti || 'Not assessed'}, Vikriti: ${a.assessment_data?.vikriti || 'Not assessed'}`,
         status: 'verified',
-        metadata: a.assessment_data
+        metadata: a.assessment_data || {}
       });
     });
 
@@ -98,9 +104,9 @@ router.get('/', authenticate, (req, res) => {
         description: t.notes || 'Ayurvedic therapy administered.',
         status: 'patient_reported',
         metadata: {
-          practitioner: t.practitioner,
-          duration: t.duration,
-          follow_up_date: t.follow_up_date
+          practitioner: t.practitioner || 'Not specified',
+          duration: t.duration || 'Not specified',
+          follow_up_date: t.follow_up_date || null
         }
       });
     });
@@ -120,7 +126,7 @@ router.get('/', authenticate, (req, res) => {
         metadata: {
           symptoms: h.symptoms || [],
           lifestyle_factors: h.lifestyle_factors || {},
-          ai_summary: h.ai_summary || ''
+          ai_summary: h.ai_summary || 'AI draft synthesis pending clinician review.'
         }
       });
     });
@@ -128,21 +134,33 @@ router.get('/', authenticate, (req, res) => {
     // 5. Compile Medicine Regimens
     const medicines = db.medicines.filter(m => m.patient_id === patientId);
     medicines.forEach(m => {
+      const medName = m.name || m.medicine_name || 'Unknown Medicine';
+      const medDosage = m.dosage || 'Dosage not recorded';
+      const medFrequency = m.frequency || 'Frequency not recorded';
+      const medSource = m.prescription_source || m.prescribing_vaidya || 'Not specified';
+      const isAyurvedic = m.medicine_type === 'ayurvedic';
+
       timelineEvents.push({
         id: `med-reg-${m.id}`,
-        date: formatDate(m.created_at),
+        date: formatDate(m.start_date || m.created_at),
         type: 'medicine',
-        icon: m.medicine_type === 'ayurvedic' ? '🌿' : '💊',
-        title: `Medicine Added: ${m.name}`,
-        subtitle: m.medicine_type === 'ayurvedic' ? 'Ayurvedic Regimen' : 'Modern Medicine',
-        description: `${m.dosage} — ${m.frequency}. Prescribed by ${m.prescribing_vaidya || 'Clinician'}.`,
+        icon: isAyurvedic ? '🌿' : '💊',
+        title: `Medicine Added: ${medName}`,
+        subtitle: isAyurvedic ? 'Ayurvedic Regimen' : 'Modern Medicine',
+        description: `${medDosage} — ${medFrequency}. Source: ${medSource}.`,
         status: m.is_active ? 'verified' : 'patient_reported',
         metadata: {
-          dosage: m.dosage,
-          frequency: m.frequency,
-          route: m.route,
-          duration_days: m.duration_days,
-          safety_notes: m.safety_notes
+          medicine_name: medName,
+          dosage: medDosage,
+          frequency: medFrequency,
+          route: m.route || null,
+          duration: m.end_date ? `Until ${m.end_date}` : 'Ongoing',
+          duration_days: m.duration_days || null,
+          safety_notes: m.safety_notes || null,
+          is_active: !!m.is_active,
+          prescription_source: medSource,
+          start_date: formatDate(m.start_date),
+          end_date: m.end_date || null
         }
       });
     });
@@ -150,23 +168,40 @@ router.get('/', authenticate, (req, res) => {
     // 6. Compile Consultations / Appointments
     const appointments = db.appointments.filter(ap => ap.patient_id === patientId);
     appointments.forEach(ap => {
-      let status = 'scheduled';
-      if (ap.status === 'completed') status = 'completed';
-      else if (ap.status === 'cancelled') status = 'cancelled';
+      const doctor = db.doctors.find(d => d.id === ap.doctor_id);
+      const doctorName = doctor
+        ? `Dr. ${doctor.first_name || ''} ${doctor.last_name || ''}`.trim()
+        : 'Medical Specialist';
+      const specialization = doctor ? (doctor.specialization || '') : '';
+      const hospital = db.hospitals.find(h => h.id === ap.hospital_id);
+      const hospitalName = hospital ? hospital.name : 'Hospital not specified';
+
+      let apptStatus = 'scheduled';
+      if (ap.status === 'completed') apptStatus = 'completed';
+      else if (ap.status === 'cancelled') apptStatus = 'cancelled';
+
+      const chiefComplaint = ap.chief_complaint || ap.purpose || 'General Consultation';
+      const consultTypeLabel = ap.consultation_type === 'video_consult' ? '📹 Video Consult' : '🏥 In-Person';
 
       timelineEvents.push({
         id: `appt-${ap.id}`,
         date: formatDate(ap.appointment_date),
         type: 'appointment',
         icon: '🩺',
-        title: ap.reason || 'Clinical Consultation',
-        subtitle: 'Doctor Appointment',
-        description: `Consultation with Dr. ${ap.doctor_name || 'Medical Specialist'}.`,
-        status,
+        title: chiefComplaint,
+        subtitle: `Appointment — ${doctorName}`,
+        description: `${consultTypeLabel} with ${doctorName}${specialization ? ` (${specialization})` : ''}.`,
+        status: apptStatus,
         metadata: {
-          time_slot: ap.time_slot,
-          department: ap.department,
-          status: ap.status
+          doctor_name: doctorName,
+          specialization: specialization || 'Specialist',
+          time_slot: ap.start_time || 'Time not specified',
+          consultation_type: ap.consultation_type || 'in_person',
+          consultation_type_label: consultTypeLabel,
+          chief_complaint: chiefComplaint,
+          appointment_date: formatDate(ap.appointment_date),
+          status: ap.status || 'scheduled',
+          hospital_name: hospitalName
         }
       });
     });
