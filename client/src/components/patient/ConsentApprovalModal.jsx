@@ -42,7 +42,7 @@ export const ConsentApprovalModal = ({ isOpen, onClose, consent, onApprove, onDe
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Review Medical Access Request" maxWidth="max-w-lg">
+    <Modal isOpen={isOpen} onClose={onClose} title="ACCESS REQUEST" maxWidth="max-w-lg">
       <div className="space-y-4">
         
         {/* Doctor Header */}
@@ -72,17 +72,16 @@ export const ConsentApprovalModal = ({ isOpen, onClose, consent, onApprove, onDe
         {/* Category Permissions Selection */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-bold text-slate-700">
-              Select Record Categories to Grant:
+            <label className="text-xs font-bold text-slate-700 uppercase tracking-wide">
+              Requested Information:
             </label>
             <span className="text-[11px] text-sky-700 font-semibold">
-              {selectedCategories.length} selected
+              {selectedCategories.length} of {consent.requested_categories?.length || 0} selected
             </span>
           </div>
 
           <div className="space-y-2 max-h-48 overflow-y-auto p-1">
-            {RECORD_CATEGORIES.map((cat) => {
-              const isRequested = consent.requested_categories?.includes(cat.id);
+            {RECORD_CATEGORIES.filter(cat => consent.requested_categories?.includes(cat.id)).map((cat) => {
               const isChecked = selectedCategories.includes(cat.id);
 
               return (
@@ -102,12 +101,10 @@ export const ConsentApprovalModal = ({ isOpen, onClose, consent, onApprove, onDe
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span>{cat.label}</span>
-                      {isRequested && (
-                        <span className="text-[9px] px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-700 font-bold uppercase">
-                          Requested
-                        </span>
-                      )}
+                      <span className="font-semibold">{cat.label}</span>
+                      <span className="text-[9px] px-1.5 py-0.2 rounded bg-indigo-100 text-indigo-700 font-bold uppercase">
+                        Requested
+                      </span>
                     </div>
                     <p className="text-[10px] text-slate-500 mt-0.5">{cat.description}</p>
                   </div>
@@ -137,21 +134,19 @@ export const ConsentApprovalModal = ({ isOpen, onClose, consent, onApprove, onDe
           </select>
         </div>
 
-        {/* Security Warning */}
-        <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[11px] text-amber-900 flex items-start gap-2">
-          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
-          <span>You can revoke this authorization at any time immediately from the Consent Center.</span>
+        {/* Notice of Limit */}
+        <div className="p-3 bg-sky-50 rounded-xl border border-sky-100 text-xs text-sky-800 font-medium text-center">
+          Only the selected categories will be shared with this doctor.
         </div>
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3 pt-2">
           <button
-            onClick={handleDeny}
+            onClick={onClose}
             disabled={loading}
-            className="flex-1 py-2.5 px-4 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1.5 transition"
+            className="flex-1 py-2.5 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-600 font-bold text-xs flex items-center justify-center gap-1.5 transition"
           >
-            <X className="w-4 h-4" />
-            Deny Access
+            Cancel
           </button>
 
           <button
@@ -160,7 +155,7 @@ export const ConsentApprovalModal = ({ isOpen, onClose, consent, onApprove, onDe
             className="flex-1 py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-sky-600/20 transition"
           >
             <ShieldCheck className="w-4 h-4" />
-            Approve Selected Records
+            Approve Selected Access
           </button>
         </div>
 

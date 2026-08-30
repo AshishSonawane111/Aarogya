@@ -57,6 +57,37 @@ export const ConsentCenterPage = () => {
     }
   };
 
+  const handleDenyRequest = async (consentId, doctorName) => {
+    if (!window.confirm(`Are you sure you want to reject the access request from ${doctorName}?`)) return;
+    try {
+      await consentAPI.denyConsent(consentId);
+      addToast({
+        title: 'Request Rejected',
+        message: `Access request from ${doctorName} has been rejected.`,
+        type: 'info'
+      });
+      fetchConsents();
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const categoryIcons = {
+    medical_history: '🩺',
+    lab_reports: '🧪',
+    prescriptions: '💊',
+    diagnoses: '📋',
+    hospital_records: '🏥',
+    consultations: '📅',
+    scans: '🔬',
+    complete_record: '🗂️'
+  };
+
+  const getCategoryWithIcon = (catId) => {
+    const icon = categoryIcons[catId] || '📄';
+    return `${icon} ${getCategoryLabel(catId)}`;
+  };
+
   const pending = consents.filter((c) => c.status === 'pending');
   const active = consents.filter(
     (c) => c.status === 'approved' && new Date(c.valid_until) > new Date()
@@ -146,23 +177,36 @@ export const ConsentCenterPage = () => {
                       <StatusBadge status="pending" />
                     </div>
 
-                    <div className="text-xs space-y-1">
+                    <div className="text-xs space-y-2">
                       <div className="text-slate-700">
                         <strong>Reason:</strong> "{req.reason}"
                       </div>
                       <div className="text-slate-700">
-                        <strong>Requested Categories:</strong>{' '}
-                        {req.requested_categories?.map(getCategoryLabel).join(', ')}
+                        <strong>Requested Information:</strong>
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {req.requested_categories?.map((cat) => (
+                            <span key={cat} className="px-2 py-0.5 rounded bg-white text-slate-700 text-[10px] font-semibold border border-slate-200">
+                              {getCategoryWithIcon(cat)}
+                            </span>
+                          ))}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="pt-2">
+                    <div className="pt-2 flex items-center gap-3">
+                      <button
+                        onClick={() => handleDenyRequest(req.id, req.doctor_name)}
+                        className="flex-1 py-2.5 px-4 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center gap-1.5 transition"
+                      >
+                        <X className="w-4 h-4" />
+                        Reject
+                      </button>
                       <button
                         onClick={() => setSelectedConsent(req)}
-                        className="w-full py-2.5 px-4 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow-md shadow-amber-600/20 transition flex items-center justify-center gap-1.5"
+                        className="flex-1 py-2.5 px-4 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs shadow-md shadow-sky-600/20 transition flex items-center justify-center gap-1.5"
                       >
                         <ShieldCheck className="w-4 h-4" />
-                        Review Categories & Approve Access
+                        Review & Approve
                       </button>
                     </div>
                   </div>
@@ -201,31 +245,40 @@ export const ConsentCenterPage = () => {
                           <div className="text-xs text-sky-700 font-semibold">{act.specialization}</div>
                         </div>
                       </div>
-                      <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                        Active Access
+                      <span className="text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-1 shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                        Active Access — {act.approved_categories?.length || 0} {act.approved_categories?.length === 1 ? 'category' : 'categories'}
                       </span>
                     </div>
 
-                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100 text-xs space-y-1">
+                    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 text-xs space-y-2">
                       <span className="text-[10px] text-slate-400 uppercase font-semibold block">Permitted Categories</span>
-                      <div className="flex flex-wrap gap-1.5 pt-0.5">
+                      <div className="flex flex-wrap gap-2 pt-0.5">
                         {act.approved_categories?.map((cat) => (
-                          <span key={cat} className="px-2 py-0.5 rounded bg-white text-slate-800 text-[11px] font-semibold border border-slate-200">
-                            {getCategoryLabel(cat)}
+                          <span key={cat} className="px-3 py-1 rounded-xl bg-white text-slate-800 text-[11px] font-semibold border border-slate-200 shadow-2xs">
+                            {getCategoryWithIcon(cat)}
                           </span>
                         ))}
                       </div>
+                      <span className="text-[10px] text-slate-400 italic block pt-1 border-t border-slate-100 mt-1">
+                        Access is limited to the categories you approved.
+                      </span>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs pt-1">
-                      <span className="text-slate-500 flex items-center gap-1 text-[11px]">
-                        <Clock className="w-3.5 h-3.5 text-sky-600" />
-                        Expires: {formatDateTime(act.valid_until)}
-                      </span>
+                    <div className="flex items-center justify-between text-xs pt-1 flex-wrap gap-2">
+                      <div className="space-y-0.5">
+                        <span className="text-slate-400 block text-[10px]">
+                          Approved on: <strong className="text-slate-600 font-semibold">{formatDate(act.valid_from || act.updated_at)}</strong>
+                        </span>
+                        <span className="text-slate-500 flex items-center gap-1 text-[11px]">
+                          <Clock className="w-3.5 h-3.5 text-sky-600" />
+                          Expires: {formatDateTime(act.valid_until)}
+                        </span>
+                      </div>
 
                       <button
                         onClick={() => handleRevoke(act.id, act.doctor_name)}
-                        className="text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1 hover:underline"
+                        className="text-xs font-bold text-rose-600 hover:text-rose-800 flex items-center gap-1 hover:underline ml-auto"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                         Revoke Access Now
@@ -291,11 +344,31 @@ export const ConsentCenterPage = () => {
           isOpen={!!selectedConsent}
           onClose={() => setSelectedConsent(null)}
           consent={selectedConsent}
-          onApprove={async () => {
-            await fetchConsents();
+          onApprove={async (id, data) => {
+            try {
+              await consentAPI.approveConsent(id, data);
+              addToast({
+                title: 'Consent Granted',
+                message: 'Records access has been approved successfully.',
+                type: 'success'
+              });
+              await fetchConsents();
+            } catch (err) {
+              console.error(err);
+            }
           }}
-          onDeny={async () => {
-            await fetchConsents();
+          onDeny={async (id) => {
+            try {
+              await consentAPI.denyConsent(id);
+              addToast({
+                title: 'Consent Rejected',
+                message: 'Access request has been rejected.',
+                type: 'info'
+              });
+              await fetchConsents();
+            } catch (err) {
+              console.error(err);
+            }
           }}
         />
       )}

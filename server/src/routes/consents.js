@@ -134,13 +134,25 @@ router.post('/:consentId/approve', authenticate, (req, res) => {
   const now = new Date();
   const validUntil = new Date(now.getTime() + duration * 60 * 60 * 1000);
 
-  const categories = approved_categories && approved_categories.length > 0
+  // SECURITY: approved_categories must be a strict subset of requested_categories.
+  // This is enforced server-side — the backend NEVER grants more than what was requested,
+  // regardless of what the client sends.
+  const requestedSet = new Set(consent.requested_categories || []);
+  const clientApproved = approved_categories && approved_categories.length > 0
     ? approved_categories
     : consent.requested_categories;
+
+  // Clamp to intersection — strip any categories not in the original request
+  const categories = clientApproved.filter(cat => requestedSet.has(cat));
+
+  if (categories.length === 0) {
+    return res.status(400).json({ error: 'At least one valid requested category must be approved.' });
+  }
 
   consent.status = 'approved';
   consent.approved_categories = categories;
   consent.valid_from = now.toISOString();
+  consent.approved_at = now.toISOString();
   consent.valid_until = validUntil.toISOString();
   consent.updated_at = now.toISOString();
 
@@ -156,7 +168,7 @@ router.post('/:consentId/approve', authenticate, (req, res) => {
     });
   }
 
-  // Audit Log
+  // Audit Log — record ONLY the approved categories, not the full request
   recordAuditLog({
     patient_id: req.patient.id,
     actor_id: req.user.id,
@@ -168,7 +180,11 @@ router.post('/:consentId/approve', authenticate, (req, res) => {
     consent_status: 'approved',
     ip_address: req.ip || '127.0.0.1',
     user_agent: req.headers['user-agent'] || 'Patient Portal',
-    details: { approved_categories: categories, valid_until: validUntil.toISOString() }
+    details: {
+      approved_categories: categories,
+      requested_categories: consent.requested_categories,
+      valid_until: validUntil.toISOString()
+    }
   });
 
   res.json({
