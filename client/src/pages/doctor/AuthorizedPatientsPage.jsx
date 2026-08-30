@@ -5,6 +5,7 @@ import { useNotification } from '../../context/NotificationContext';
 import { PrescriptionWriterModal } from '../../components/doctor/PrescriptionWriterModal';
 import { ConsultationModal } from '../../components/doctor/ConsultationModal';
 import { AudioVoiceTranslator } from '../../components/shared/AudioVoiceTranslator';
+import { VaidyaAyurvedaWorkspace } from '../../components/doctor/VaidyaAyurvedaWorkspace';
 import { 
   UserCheck, 
   ShieldCheck, 
@@ -23,7 +24,8 @@ import {
   CheckCircle,
   Edit3,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Leaf
 } from 'lucide-react';
 import { formatDate, formatDateTime, getCategoryLabel } from '../../utils/helpers';
 
@@ -49,6 +51,7 @@ export const AuthorizedPatientsPage = () => {
   // Phase 5 state
   const [digitizationSessions, setDigitizationSessions] = useState([]);
   const [showDigitizationCenter, setShowDigitizationCenter] = useState(false);
+  const [showAyurvedaWorkspace, setShowAyurvedaWorkspace] = useState(false);
   const [editingSessionId, setEditingSessionId] = useState(null);
   const [docNotesInput, setDocNotesInput] = useState('');
   const [verifyingDocSession, setVerifyingDocSession] = useState(false);
@@ -632,6 +635,42 @@ export const AuthorizedPatientsPage = () => {
           )}
         </div>
       )}
+
+      {/* Phase 8: Vaidya Ayurveda Workspace */}
+      {(() => {
+        const hasAyurvedaConsent = activeConsent?.approved_categories?.includes('ayurveda') || activeConsent?.approved_categories?.includes('complete_record');
+        if (!hasAyurvedaConsent) return null;
+        return (
+          <div className="bg-white rounded-3xl border border-emerald-200 shadow-md overflow-hidden">
+            <button
+              onClick={() => setShowAyurvedaWorkspace(!showAyurvedaWorkspace)}
+              className="w-full flex items-center justify-between p-5 hover:bg-emerald-50/30 transition btn-inline text-left"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-100/70 text-emerald-600 flex items-center justify-center shrink-0">
+                  <Leaf className="w-5 h-5 animate-pulse" />
+                </div>
+                <div className="text-left">
+                  <div className="font-bold text-sm text-slate-900 font-display">🌿 Vaidya Ayurveda Workspace</div>
+                  <div className="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                    <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full"></span>
+                    <span>Ayurveda Access Granted</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                {showAyurvedaWorkspace ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+              </div>
+            </button>
+
+            {showAyurvedaWorkspace && (
+              <div className="border-t border-emerald-100 bg-slate-50/10">
+                <VaidyaAyurvedaWorkspace patientId={targetPatientId} patientName={patientName} />
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Permitted Medical Records Timeline */}
 

@@ -20,7 +20,7 @@ router.get('/', authenticate, (req, res) => {
     const timelineEvents = [];
 
     // Helper to format ISO strings to date format (YYYY-MM-DD)
-    const formatDate = (isoStr) => {
+    const formatDateStr = (isoStr) => {
       if (!isoStr) return new Date().toISOString().split('T')[0];
       return isoStr.split('T')[0];
     };
@@ -49,7 +49,7 @@ router.get('/', authenticate, (req, res) => {
 
       timelineEvents.push({
         id: `med-${r.id}`,
-        date: formatDate(r.record_date),
+        date: formatDateStr(r.record_date),
         type: 'medical_record',
         icon,
         title: r.title || 'Medical Record',
@@ -80,14 +80,20 @@ router.get('/', authenticate, (req, res) => {
     ayurvedaAssessments.forEach(a => {
       timelineEvents.push({
         id: `ayur-assess-${a.id}`,
-        date: formatDate(a.created_at),
+        date: formatDateStr(a.created_at || a.assessed_at),
         type: 'ayurveda_assessment',
         icon: '🌿',
         title: 'Ayurvedic Consultation',
         subtitle: 'Dashavidha Pariksha Assessment',
-        description: `Vaidya assessment completed. Prakriti: ${a.assessment_data?.prakriti || 'Not assessed'}, Vikriti: ${a.assessment_data?.vikriti || 'Not assessed'}`,
+        description: `Vaidya assessment completed. Confirmed Prakriti: ${a.prakriti_confirmed || a.assessment_data?.prakriti || 'Not assessed'}, Confirmed Vikriti: ${a.vikriti_confirmed || a.assessment_data?.vikriti || 'Not assessed'}`,
         status: 'verified',
-        metadata: a.assessment_data || {}
+        metadata: {
+          ...(a.dashavidha || {}),
+          prakriti_confirmed: a.prakriti_confirmed,
+          vikriti_confirmed: a.vikriti_confirmed,
+          vaidya_notes: a.vaidya_notes,
+          assessed_by: a.assessed_by
+        }
       });
     });
 
@@ -96,17 +102,18 @@ router.get('/', authenticate, (req, res) => {
     ayurvedaTreatments.forEach(t => {
       timelineEvents.push({
         id: `ayur-treat-${t.id}`,
-        date: formatDate(t.treatment_date),
+        date: formatDateStr(t.treatment_date || t.date),
         type: 'ayurveda_treatment',
         icon: '🧘',
         title: t.treatment_name || 'Ayurvedic Treatment',
         subtitle: t.treatment_type || 'Panchakarma',
         description: t.notes || 'Ayurvedic therapy administered.',
-        status: 'patient_reported',
+        status: t.recorded_by === 'doctor' ? 'verified' : 'patient_reported',
         metadata: {
           practitioner: t.practitioner || 'Not specified',
           duration: t.duration || 'Not specified',
-          follow_up_date: t.follow_up_date || null
+          follow_up_date: t.follow_up_date || null,
+          response: t.response || null
         }
       });
     });
@@ -116,7 +123,7 @@ router.get('/', authenticate, (req, res) => {
     clinicalHistories.forEach(h => {
       timelineEvents.push({
         id: `ai-intake-${h.id}`,
-        date: formatDate(h.created_at),
+        date: formatDateStr(h.created_at),
         type: 'ai_intake',
         icon: '🤖',
         title: 'AI Clinical Intake History',
@@ -131,35 +138,42 @@ router.get('/', authenticate, (req, res) => {
       });
     });
 
-    // 5. Compile Medicine Regimens
+    // 5. Compile Medicine Regimens (Modern & Ayurvedic)
     const medicines = db.medicines.filter(m => m.patient_id === patientId);
-    medicines.forEach(m => {
+    const ayurvedaMeds = db.ayurveda_medicines.filter(m => m.patient_id === patientId);
+
+    const allMeds = [
+      ...medicines.map(m => ({ ...m, medicine_type: m.medicine_type || 'modern' })),
+      ...ayurvedaMeds.map(m => ({ ...m, medicine_type: 'ayurvedic', start_date: m.start_date || m.created_at }))
+    ];
+
+    allMeds.forEach(m => {
       const medName = m.name || m.medicine_name || 'Unknown Medicine';
-      const medDosage = m.dosage || 'Dosage not recorded';
+      const medDosage = m.dose || m.dosage || 'Dosage not recorded';
       const medFrequency = m.frequency || 'Frequency not recorded';
-      const medSource = m.prescription_source || m.prescribing_vaidya || 'Not specified';
+      const medSource = m.prescription_source || m.prescribing_vaidya || m.prescriber || 'Not specified';
       const isAyurvedic = m.medicine_type === 'ayurvedic';
 
       timelineEvents.push({
         id: `med-reg-${m.id}`,
-        date: formatDate(m.start_date || m.created_at),
+        date: formatDateStr(m.start_date || m.created_at),
         type: 'medicine',
         icon: isAyurvedic ? '🌿' : '💊',
         title: `Medicine Added: ${medName}`,
         subtitle: isAyurvedic ? 'Ayurvedic Regimen' : 'Modern Medicine',
         description: `${medDosage} — ${medFrequency}. Source: ${medSource}.`,
-        status: m.is_active ? 'verified' : 'patient_reported',
+        status: m.recorded_by === 'doctor' || m.prescriber ? 'verified' : (m.is_active ? 'verified' : 'patient_reported'),
         metadata: {
           medicine_name: medName,
           dosage: medDosage,
           frequency: medFrequency,
           route: m.route || null,
-          duration: m.end_date ? `Until ${m.end_date}` : 'Ongoing',
+          duration: m.end_date ? `Until ${m.end_date}` : (m.duration ? m.duration : 'Ongoing'),
           duration_days: m.duration_days || null,
-          safety_notes: m.safety_notes || null,
+          safety_notes: m.safety_notes || m.notes || null,
           is_active: !!m.is_active,
           prescription_source: medSource,
-          start_date: formatDate(m.start_date),
+          start_date: formatDateStr(m.start_date),
           end_date: m.end_date || null
         }
       });
@@ -185,7 +199,7 @@ router.get('/', authenticate, (req, res) => {
 
       timelineEvents.push({
         id: `appt-${ap.id}`,
-        date: formatDate(ap.appointment_date),
+        date: formatDateStr(ap.appointment_date),
         type: 'appointment',
         icon: '🩺',
         title: chiefComplaint,
@@ -199,9 +213,35 @@ router.get('/', authenticate, (req, res) => {
           consultation_type: ap.consultation_type || 'in_person',
           consultation_type_label: consultTypeLabel,
           chief_complaint: chiefComplaint,
-          appointment_date: formatDate(ap.appointment_date),
+          appointment_date: formatDateStr(ap.appointment_date),
           status: ap.status || 'scheduled',
           hospital_name: hospitalName
+        }
+      });
+    });
+
+    // 7. Compile Ayurvedic Treatment Responses
+    const ayurvedaResponses = db.treatment_responses.filter(r => r.patient_id === patientId);
+    ayurvedaResponses.forEach(r => {
+      const treatment = db.ayurveda_treatments.find(t => t.id === r.treatment_id);
+      const treatmentName = treatment ? treatment.treatment_name : 'General Regimen';
+      
+      timelineEvents.push({
+        id: `ayur-resp-${r.id}`,
+        date: formatDateStr(r.created_at),
+        type: 'ayurveda_response',
+        icon: '📈',
+        title: `Ayurvedic Outcome Tracked (${r.period})`,
+        subtitle: `Therapeutic Response — ${treatmentName}`,
+        description: `Symptom Score: ${r.symptom_score ?? 'N/A'}/10 | Sleep: ${r.sleep_quality || 'N/A'} | Energy: ${r.energy_level || 'N/A'}. Notes: ${r.notes || 'Outcome recorded.'}`,
+        status: r.recorded_by === 'doctor' ? 'verified' : 'patient_reported',
+        metadata: {
+          period: r.period,
+          symptom_score: r.symptom_score,
+          sleep_quality: r.sleep_quality,
+          energy_level: r.energy_level,
+          digestion: r.digestion,
+          notes: r.notes
         }
       });
     });

@@ -80,6 +80,7 @@ export const ConsentCenterPage = () => {
     hospital_records: '🏥',
     consultations: '📅',
     scans: '🔬',
+    ayurveda: '🌿',
     complete_record: '🗂️'
   };
 

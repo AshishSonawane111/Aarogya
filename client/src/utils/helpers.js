@@ -6,8 +6,10 @@ export const RECORD_CATEGORIES = [
   { id: 'hospital_records', label: 'Hospital Records', description: 'Admission notes, discharge summaries, and inpatient charts' },
   { id: 'consultations', label: 'Consultations', description: 'Doctor clinical evaluation notes and vitals' },
   { id: 'scans', label: 'Scans & Radiology', description: 'X-Rays, MRI, CT scans, and 2D Echocardiograms' },
+  { id: 'ayurveda', label: 'Ayurveda', description: 'Ayurvedic profile, Prakriti/Vikriti, medicines, treatments, and Vaidya assessments' },
   { id: 'complete_record', label: 'Complete Medical File', description: 'All historical categories and uploaded files' }
 ];
+
 
 export function getCategoryLabel(categoryId) {
   const cat = RECORD_CATEGORIES.find(c => c.id === categoryId);
